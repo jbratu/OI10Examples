@@ -1,0 +1,75 @@
+function get_inv_nos(dummy)
+
+@ans = ''
+keys = ''
+open 'DICT.INVOICES' to d_invoices then
+srch_string = 'CUST_NO':@vm:4:@fm
+table = 'INVOICES'
+dictvar = d_invoices
+call Btree.Extract(srch_string, table, dictvar, keys)
+end
+@ans = keys
+
+return @ans
+--[begin_sep::son_vni_teg**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "GET_INV_NOS"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "SYSPROG*STPROC**ADDAREV32MENU",
+      "updatedOn"      : "24 JAN 2019 10:15",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,617 @@
+Subroutine O4W_EDIT_RECORD(CtlEntId, Event, Request)
+*
+* O4W coding example
+*
+* Create, edit, or delete records in any table
+* URL: http://.../oecgi4.exe/O4W_EDIT_RECORD
+* or : http://.../oecgi4.exe/O4W_EDIT_RECORD?TABLE=<tablename>
+* or : http://.../oecgi4.exe/O4W_EDIT_RECORD?TABLE=<tablename>&ITEM=<itemid>
+*
+* Prompt the user for the table name, and (after it's selected) the item ID, or allow for entry of a new item ID, or
+* Prompt the user for the item ID, or allow for entry of a new item ID, when a table name is passed in
+* After the table and item name have been specified, determine which fields in the dictionary we can use, and build
+*       editable fields for each allowed dictionary item
+*
+* Main Program flow: CREATE event (which may call getID)
+*                    CHANGE event (if table not specified in URL), which then calls getID
+*                    CLICK event/BTNEDIT which then calls DisplaySection
+*
+*                    CLICK event/BTNCANCEL which then calls DisplaySection, or
+*                    CLICK event/BTNSAVE which calls LockIT (may then call ChooseAnother), or
+*                    CLICK event/BTNDELETE which calls LockIT (may then call ChooseAnother)
+*                
+
+*
+* Insert required equates and commons
+$Insert O4WCommon
+$Insert O4WEquates
+* Since we're going to check the configuration record, include this equate as well
+$Insert O4WConfigEquates
+
+Declare Function Repository
+
+* define some O4W "styles"
+textReplace = O4WResponseStyle('','1','')
+styleReplace = O4WResponseStyle('','','1')
+selectMe = O4WMarkedStyle('','1')
+deSelectMe = O4WMarkedStyle('','0')
+enableMe = O4WInputStyle('','1')
+disableMe = O4WInputStyle('','0')
+promptColor = O4WColorStyle("", "lightblue")
+* retrieve (if set) our unique id
+uniqueID = O4WGetValue("O4WUniqueID")
+
+* read the configuration record (using the appropriate repository method)
+configRec = Repository("ACCESS", @APPID<1>:"*CONFIG*O4W*CFG_O4W")
+Call Set_Status(0)
+* determine the "filter procedure" that has been specified in the configuration record
+FILTER_PROC = configRec<O4WCONFIG_FILTER_PROC$>
+If FILTER_PROC = "" Then FILTER_PROC = "O4WI_FILTER"
+
+Begin Case
+	Case Event _eqc "CREATE"
+		* Initial form creation
+		O4WForm()
+		* get our unique ID (set by o4wform)
+		uniqueID = O4WGetValue("O4WUniqueID")
+		O4WHeader("OpenInsight for Web: Create/Edit Records", 3)
+		O4WBreak()
+		O4WBreak()
+		* define the area for our 'breadcrumbs'
+		O4WSectionStart("breadcrumb", deSelectMe)
+		O4WSectionEnd("breadcrumb")
+		*...and define the breadcrumbs themselves
+		O4WBreadCrumbs("breadcrumb", "SELECTION":@VM:"EDITSECTION", O4WI_FORMATMSG(O4W_MESSAGE_BREADCRUMB_SELECT$):@VM:"Edit")
+		O4WBreak()
+		O4WBreak()
+		
+		* this is the 'selection' page - allow the user to specify the table and item to edit
+		O4WSectionStart("SELECTION", selectMe)
+		* Might we be called with a table and item already specified?		
+		TABLE = O4WGetValue("TABLE")
+		ID = O4WGetValue("ITEM")
+		bHaveBoth = 1
+		O4WTableStart("promptTable")
+		If table = "" Then
+			bHaveBoth = 0
+			* build the prompt for the table name
+			O4WSetCell(1,1)
+			O4WText("Please select the table: ")
+			* use the shorthand to move to the next cell in the current row
+			O4WSetCell()
+			* call the filter procedure to retrieve what table(s) we are allowed to work on
+			TLIST = Function(@FILTER_PROC("O4W_EDIT_RECORD", O4WSessionInfo%))
+			* build the list of tables into a listbox - and select 'none' to start
+			O4WListBox("Please select...", "<none>", "TABLE", "", "tblNONE", selectMe)
+			O4WListbox(tlist, tlist, "TABLE", '', tlist)
+			* mark the table name input so we know when one has been selected
+			O4WQualifyEvent("TABLE", "CHANGE", "LISTBOX")
+			* define a section for getting the ID once the table is selected
+			* of course, we can't actually fill this in yet - these are "placeholders" until the table has been chosen
+			O4WSetCell(2,1)
+			O4WText("Please select the record ID: ")
+			O4WSetCell(2,2)
+			O4WSectionStart("idSection")
+			O4WText("<Please select a table...>")
+			O4WSectionEnd("idSection")
+			O4WSetCell(3,1)
+			O4WText("Or enter the name of a record to create: ")
+			O4WSetCell(3,2)
+			O4WSectionStart("newidSection")
+			O4WText("<Please select a table...>")
+			O4WSectionEnd("newidSection")
+		End Else
+			* have table specified; what about item?
+			If ID = "" Then
+				* No, the item ID has not been passed in - build the list of available item ids
+				bHaveBoth = 0
+				O4WSetCell(1,1)
+				O4WText("Please select the ":TABLE:" record ID: ")
+				O4WSetCell()
+				Gosub getID
+				O4WSetCell(2,1)
+				O4WText("Or enter the name of a record to create: ")
+				O4WSetCell(2,2)
+				O4WTextbox("", "", "", "NEWITEM")
+			End
+		End
+		If bHaveBoth = 0 Then
+			* since we don't have both, put up the button to proceed when they _do_ have both specified
+			* use "+1" to increment the row (whatever it currently is)
+			O4WSetCell("+1", 2)
+			O4WButton("Edit", "BTNEDIT", selectMe)
+			* Qualify our "click" event
+			O4WQualifyEvent("BTNEDIT", "CLICK")
+		End
+		* finish up our table for the prompts
+		O4WTableEnd("promptTable")
+		* finish up the section (page) for the prompts
+		O4WSectionEnd("SELECTION")
+		
+		* define the section (page) for the actual editing
+		O4WSectionStart("EDITSECTION", selectMe)
+		If id = "" Or table = "" Then
+			* don't have all the required pieces - just leave us on the selection page
+			O4WSetBreadcrumb("SELECTION")
+		End Else
+			* have both table and item id - move directly to the editing
+			O4WSetBreadcrumb("EDITSECTION")
+			Open TABLE To CODE.FL Else
+				O4WError("Unable to open table '":TABLE:"'")
+				Return
+			End
+			* call the lockhandler routine to read the original record
+			Call o4wi_lockhandler(O4W_LOCKHANDLER_ACTION_READ$, code.fl, id, info, UniqueID:"*":table:"*":id:"*ORIG")
+			Gosub displaySection ;* re-entry point to redisplay
+		end
+		o4wsectionEnd("EDITSECTION")
+		
+		* preserve a section for our special messages
+		O4WSectionStart("specialDialog", selectMe)
+		O4WSectionEnd("specialDialog")
+
+	Case event _eqc "CHANGE"
+		* table to operate on has changed
+		O4WResponse()
+		* what table have they selected?
+		TABLE = O4WGetValue("O4WChangeID")
+		* rebuild the "placeholders" with the prompts for the id
+		O4WSectionStart("idSection", o4wresponsestyle())
+		Gosub getID
+		O4WSectionEnd("idSection")
+		*...and the prompt for a "new item"
+		O4WSectionStart("newidSection", o4wresponsestyle())
+		O4WTextbox("", "", "", "NEWITEM")
+		O4WSectionEnd("newidSection")
+		
+	Case event _eqc "CLICK"
+		Begin Case
+			Case CTLENTID _EQC "BTNCANCEL"
+				* Throw away any changes, and refresh the page with a current copy of the record
+				O4WResponse()
+				TABLE = O4WGetValue("TABLE")<1,1>
+				ID = O4WGetValue("ID")<1,1>
+				If ID = "" Or TABLE = "" Then
+					* don't know what we were working on? That's a problem
+					O4WError("Unable to retrieve record")
+					Return
+				End
+				Open TABLE To CODE.FL Else
+					* Can't open the table we think we're working on? That's a problem
+					O4WError("Unable to open table '":table:"'")
+					Return
+				End
+				* re-read the record
+				Call o4wi_lockhandler(O4W_LOCKHANDLER_ACTION_READ$, code.fl, ID, info, UniqueID:"*":TABLE:"*":ID:"*ORIG")
+				* recreate the section containing the editable fields
+				O4WSectionStart("EDITSECTION", O4WResponseOptions():selectMe)
+				Gosub displaySection ;* redisplay this record
+				O4WSectionEnd("EDITSECTION")
+			Case CTLENTID _EQC "BTNSAVE" Or ctlentid _eqc "BTNSAVE2"
+				* called either on the original 'save' button press, or after selecting a new item ID
+				* make sure we can lock the record, and it hasn't been changed by anyone else since we originally read it in
+				Action = "Save"
+				Actionbtn = "BTNSAVE"
+				Gosub lockIT
+				If error = "" Then
+					* No problems - write it out
+					Call O4WI_Lockhandler(O4W_LOCKHANDLER_ACTION_WRITE$, code.fl, ID, INFO, UniqueID:"*":TABLE:"*":ID:"*ORIG")
+					* Display our "update successful" response
+					O4WError("Record '":ID:"' updated", "Save Record")
+				End
+			Case ctlentid _eqc "BTNCANCEL2"
+				* Called when cancelling the save/delete dialog
+				* Just dismiss the dialog
+				O4WDialog("specialDialog")
+			Case ctlentid _eqc "BTNDELETE"
+				* called to delete the record
+				* verify the deletion first
+				O4WResponse()
+				* retrieve the table and item id
+				ID = O4WGetValue("ID")<1,1>
+				TABLE = O4WGetValue("TABLE")<1,1>
+				* build our dialog to verify the deletion
+				O4WSectionStart('specialDialog', SelectMe:O4WResponseStyle())
+				* save the table and Item ID in the dialog
+				O4WStore(ID, "ID", "ID")
+				O4WStore(TABLE, "TABLE", "TABLE")
+				O4WText("Please verify deletion of record '":ID:"' in table '":table:"'")
+				O4WBreak()
+				O4WButton("Delete", "BTNDELETE2", selectMe)
+				O4WButton("Cancel", "BTNCANCEL2")
+				O4WQualifyEvent("BTNDELETE2", "CLICK")
+				O4WQualifyEvent("BTNCANCEL2", "CLICK")
+				O4WSectionEnd('specialDialog')
+				* and then show the dialog
+				O4WDialog('specialDialog', 'Confirm Deletion')
+			Case ctlentid _eqc "BTNDELETE2"
+				* called after confirmation of deletion action
+				* first, make sure we can lock the record and no one else has changed it since we read it
+				Action = "Delete"
+				Actionbtn = "BTNDELETE"
+				Gosub lockIT
+				If error = "" Then
+					* no problems - proceed with the deletion
+					* Check to see if this record already existed (ie, it wasn't a new record request)
+					Open table To code.fl Else
+						O4WError("Unable to open table '":TABLE:"'")
+						Return
+					End
+					Readv tstExist From code.fl, ID, 1 Else tstExist = ""
+					* do the actual deletion
+					Delete code.fl, ID
+					* release the record lock
+					Call O4WI_Lockhandler(O4W_LOCKHANDLER_ACTION_UNLOCK$, code.fl, ID)
+					Delete O4WTempFile%, UniqueID:"*":TABLE:"*":ID:"*ORIG"
+					* display our 'deletion successful' message
+					O4WError("Record '":ID:"' deleted", "Delete Record")
+					* If the record existed, remove it from our list of records on the selection page
+					If tstExist <> "" And bIsNew = 0 then
+						* refresh our list of available records
+						O4WScript('','o4wMoveValue("ITEM","","1");')
+					End
+					*...and move back to that selection page
+					O4WSetBreadcrumb("SELECTION")
+				End
+			Case CTLENTID _EQC "BTNEDIT"
+				* Called when the "Edit" button is pressed
+				O4WResponse()
+				* determine which table the user entered
+				table = O4WGetValue("TABLE")<1,1>
+				If table = "<none>" Then table = ""
+				* determine whether the user selected a record name from the list, or entered a new one
+				existingItem = O4WGetValue("ITEM")
+				If existingItem = "<none>" Then existingItem = ""
+				newItem = O4WGetValue("NEWITEM")
+				* make sure we have all the information we need, and it's valid
+				If existingItem = "" And newItem = "" Then
+					O4WError("You must specify a record to edit or create.")
+					Return
+				End
+				If table = "" Then
+					O4WError("You must specify which table to use")
+					Return
+				End
+				Open table To code.fl Else
+					o4werror("Unable to open table '":table:"'")
+					Return
+				end
+				If existingItem <> "" Then
+					* try to read the record
+					Call o4wi_lockhandler(O4W_LOCKHANDLER_ACTION_READ$, code.fl, existingItem, info, UniqueID:"*":table:"*":existingItem:"*ORIG")
+					* didn't read anything? That's not right...
+					If info = "" then
+						O4WError("Record '":existingItem:"' not on file in table '":TABLE:"'")
+						Return
+					End
+					ID = existingItem
+				End Else
+					* even if they keyed in the item id explicitly, still try to read it (maybe it _does_ exist)
+					Call o4wi_lockhandler(O4W_LOCKHANDLER_ACTION_READ$, code.fl, newItem, info, UniqueID:"*":table:"*":newItem:"*ORIG")
+					ID = newItem
+				End
+				* rebuild the section where the editable fields are displayed
+				O4WSectionStart("EDITSECTION", selectMe:O4WResponseStyle())
+				Gosub displaySection
+				O4WSectionEnd("EDITSECTION")
+				* set our breadcrumb so we display the editable section
+				O4WSetBreadcrumb("EDITSECTION")
+		End case
+End Case
+*
+*
+Return 0
+*
+*
+*
+lockIT: * verify underlying record is unchanged, And we can Lock it
+error = "" ;* assume success
+O4WDialog('specialDialog') ;* Dismiss dialog (if it's up)
+TABLE = O4WGetValue("TABLE")<1,1>
+Open TABLE To code.fl Else
+	error = "Table '":TABLE:"' could not be opened"
+	O4WError(error)
+	Return
+End
+* This may be a new record (potentially), or an existing record
+bIsNew = 0
+ID = O4WGetValue("NEWID")
+If ID <> "" Then
+	bIsNew = 1
+End else
+	ID = O4WGetValue("ID")<1,1>
+End
+If ID = "" Then
+	* couldn't retrieve the item ID
+	error = "Unable to access record ID"
+	O4WError(error)
+	Return
+End
+* call the lockhandler to see if the record is able to be locked, and is unchanged from its original state
+stat = O4WI_LOCKHANDLER(O4W_LOCKHANDLER_ACTION_CHECK$, code.fl, id, curr.info, UniqueID:"*":table:"*":ID:"*ORIG", O4W_LOCKHANDLER_OPTION_LOCK$)
+* the "check" method of the lockhandler will also retrieve the current contents of the record
+* load in any changes made by the user into this current record
+info = curr.info ;* we start with the original record, because in this routine we may not modify all fields
+MAXFIELDS = O4WGetValue("MAXFIELDS")
+For each.field = 1 To MAXFIELDS
+	* get the value (if any) for this field
+	* note that, since we may not have an entry for each field, we have to see if there was a field present for this field number
+	this.value = o4wgetvalue("FIELD_":EACH.FIELD, bStatus)
+	If bStatus Then
+		* yes, this field was present - continue processing
+		* if this value contained @VM or @SVM originally, and it wasn't marked as a multivalued field, we recorded that information
+		maybeConvert = o4wgetvalue("FIELD_":EACH.FIELD:"_TYPE")
+		If maybeConvert <> "" Then
+			* we had VM or SVM in the original - but not "M" in the dict
+			* we converted (for display) to a text area - that means each line is @TM delimited
+			* convert back to VM or SVM as appropriate
+			If maybeConvert = "0" Then
+				* we had @SVM in the original
+				Convert @TM To @SVM In this.value
+			End Else
+				* we had @VM in the original
+				Convert @TM To @VM In this.value
+			End
+		End
+		* record this information in the record
+		info<each.field> = this.value
+	end
+Next each.field
+* finally, check for results from the 'check' call
+If stat = O4W_LOCKHANDLER_NO_LOCK$ Then
+	* couldn't get the lock on this item - let the user choose another ID
+	error = "Unable to lock record '":ID:"' in table '":table:"'"
+	Gosub chooseAnother
+	Return
+End
+If stat = O4W_LOCKHANDLER_ITEM_CHANGED$ Then
+	* someone else changed the record while we worked on it - let the user choose another ID
+	error = "Record '":ID:"' in table '":TABLE:"' has been changed by another user"
+	* remember to unlock our current record, though
+	Call o4wi_lockhandler(O4W_LOCKHANDLER_ACTION_UNLOCK$, table, ID)
+	Gosub chooseAnother
+	Return
+End
+If bIsNew Then
+	* this is supposed to be a new record - is it?
+	Read tst From code.fl, id Else tst = ""
+	If tst <> "" Then
+		* some contents for this record already exists - we can't overwrite it - let the user choose another ID
+		error = "Record '":ID:"' already on file"
+		Gosub chooseAnother
+		return
+	end
+	O4WUpdate("ID", ID, textReplace)
+end
+Return
+*
+*
+*
+chooseAnother: * Give users option To rename record
+* Use our special dialog for the entry prompts
+O4WSectionStart('specialDialog', selectMe:O4WResponseStyle())
+* save the loaded-in contents from the browser
+O4WStore(INFO, "INFO", "INFO")
+O4WText(Error)
+O4WBreak()
+O4WText("Enter a new name for this record (if desired): ")
+O4WTextBox("", "", "", '',"NEWID")
+O4WBreak()
+O4WBreak()
+O4WButton(ACTION, ACTIONBTN:"2", selectMe)
+O4WQualifyEvent(ACTIONBTN:"2", "CLICK")
+O4WSectionEnd('specialDialog')
+* show the dialog
+O4WDialog('specialDialog', 'Error During ':ACTION)
+Return
+*
+*
+displaySection: * show the editable record
+O4WHeader("Table: ":TABLE:"; Record: ":ID, 3)
+* Determine which fields to display, and how to display them...
+* call the filter procedure to retrieve the list of valid dictionary items for us
+DICT.IDS = Function(@FILTER_PROC("O4W_EDIT_RECORD", O4WSessionInfo%, TABLE))
+* for each of the dictionaries, determine which one is the 'master' for each field
+num.ids = dcount(DICT.IDS, @VM)
+attinfo = ""
+For each.id = 1 To num.ids
+	thisID = dict.ids<1,each.id>
+	dictInfo = Xlate("DICT.":table, thisID, "", "X")
+	If dictInfo <> "" Then
+		If dictInfo<1> = "F" And dictInfo<28> = "1" Then
+			fno = dictInfo<2>
+			If fno <> "0" Then
+				* determine the various pieces of information about this dictionary that we care about
+				isMV = dictInfo<4>
+				justn = dictInfo<9>
+				Locate justn In "L,R,C,T" Using "," Setting justPosn Then
+					* convert into O4W alignment code
+					justn = Field("0,2,1,-1", ",", justPosn)
+				end
+				colwidth = dictInfo<10>
+				Locate fno In attInfo<1> by "AR" Using @VM Setting posn Else
+					* store this relevant information away in the attInfo array for each field we'll work on
+					attInfo = Insert(attInfo, 1, posn, 0, fno)
+					attInfo = Insert(attInfo, 2, posn, 0, thisID)
+					attInfo = Insert(attInfo, 3, posn, 0, isMV)
+					attInfo = Insert(attInfo, 4, posn, 0, justn)
+					attInfo = Insert(attInfo, 5, posn, 0, colwidth)
+				End
+			end
+		end
+	end
+Next each.id
+* Start the table that will contain all the fields to display/edit
+O4WTableStart('bigEdit')
+num.atts = dcount(attInfo<1>, @VM)
+For each.att = 1 To num.atts
+	* retrieve the relevant formatting,etc. information from the attInfo array we built
+	fno = attInfo<1,each.att>
+	fname = attInfo<2,each.att>
+	isMV = attInfo<3,each.att>
+	justn = attInfo<4, each.att>
+	colwidth = attInfo<5,each.att>
+	* set our cell to column one on each row, and set our color for this cell
+	O4WSetCell(each.att, 1, '', promptColor)
+	* display the field number and the field name
+	O4WText(fmt(fno, "R#3"):". ":fname)
+	* move to column 2
+	O4WSetCell()
+	* get the current value
+	thisField = info<fno>
+	If isMV = "M" Then
+		* display the multivalues in a 'growing/shrinking' table with a fixed maximum size
+		O4WSectionStart("mvfield_":fno, O4WSizeStyle("", "", "300"))
+		num.val = dcount(thisField, @VM)
+		If num.val = 0 Then num.val = 1 ;* always allow at least one value so we draw at least one textbox
+		O4WTableStart("subtable_":fno)
+		* display some table headers to look nice
+		o4wtableheader("Action")
+		O4WTableHeader("Value")
+		For each.val = 1 To num.val
+			* get the current value
+			thisVal = thisField<1,each.val>
+			* move to the next row, column 1
+			O4WSetCell("+1", 1)
+			* add in our insert and delete buttons
+			* note the use of a "named style" for each button - either "insbutton" or "delbutton"
+			O4WButton("Ins", "BTN_INS_":fno:"_":EACH.VAL, "insbutton")
+			O4WButton("Del", "BTN_DEL_":fno:"_":EACH.VAL, "delbutton")
+			* move to column 2
+			O4WSetCell()
+			* display the contents, using the width and alignment from the dictionary
+			* we mark this with the "o4wClearDuplicateVal" named style, so that O4W knows to clear this out when it's duplicated with the "insert" button
+			O4WTextbox(thisVal, colwidth, '', "FIELD_":fno, "", O4WTextStyle("", "", "", "", justn):"o4wClearDuplicateVal")
+		Next each.val
+		O4WTableEnd("subtable_":fno)
+		* add an additional "add" and "delete" set of buttons to add and delete the last row
+		O4WButton("Add Value", "BTN_ADD_":fno)
+		O4WButton("Delete Value", "BTN_DEL_":fno)
+		* qualify the add and delete buttons
+		O4WQualifyEvent("BTN_ADD_":fno, "ADDTOTABLE", "subtable_":fno, "-1")
+		O4WQualifyEvent("BTN_DEL_":fno, "DELETEFROMTABLE", "subtable_":fno, "-1")
+		O4WSectionEnd("mvfield_":fno)
+		* use a plugin so that, if the number of multivalues exceeds our fixed size, we'll have a scroll bar
+		O4WPlugin("$", "o4wScrollTable", "'subtable_":fno:"','mvfield_":fno:"','0'")
+	End Else
+		* _should_ be single valued display here
+		HAVE.VM = Count(thisField, @VM)
+		HAVE.SVM = Count(thisField, @SVM)
+		If HAVE.VM+HAVE.SVM Then
+			* what do we do about multivalue data here? Treat this as a text area...
+			Convert @VM:@SVM To @tm:@tm In thisField
+			O4WTextArea(thisField, colwidth, 5, "0", "FIELD_":fno)
+			* remember whether we had any @VM - if we did, that's what we'll use when we read the data back in
+			O4WStore(HAVE.VM, "", "FIELD_":fno:"_TYPE")
+		End Else
+			* actual single valued data, as expected
+			* display in a text box, justified and sized as specified in the dictionary
+			O4WTextbox(thisField, colwidth, '', "FIELD_":fno, "", O4WTextStyle("", "", "", "", justn))
+		end
+	end
+Next each.att
+O4WTableEnd('bigEdit')
+* use our "named style" for the insert and delete buttons to send a single qualify event for _all_ those buttons
+* note the use of "." before the style name - this tells the qualify event that this applies to an entire named style, and not a specific O4W control
+O4WQualifyEvent(".delbutton", "deleterow")
+O4WQualifyEvent(".insbutton", "insertrow")
+* save the ID and table name
+O4WStore(ID, "", "ID")
+O4WStore(TABLE, "", "TABLE")
+* save the number of fields we operated on (so we know how many to retrieve)
+O4WStore(NUM.ATTS, "", "MAXFIELDS")
+O4WBreak()
+* display our buttons
+O4WButton("Save", "BTNSAVE")
+O4WSpace(5)
+O4WButton("Cancel", "BTNCANCEL")
+O4WSpace(5)
+O4WButton("Delete", "BTNDELETE")
+* and qualify our buttons
+O4WQualifyEvent("BTNSAVE", "CLICK")
+O4WQualifyEvent("BTNCANCEL", "CLICK")
+O4WQualifyEvent("BTNDELETE", "CLICK")
+Return
+*
+*
+getID: * build section For entry of ID
+Call Set_Status(0)
+Call Rlist("SELECT ":TABLE:" BY @ID", '5')
+DONE = 0
+ids = ""
+Loop
+	Readnext thisid Else DONE = 1
+Until DONE Do
+	ids<1,-1> = thisid
+Repeat
+If ids <> "" Then
+	O4WListBox('Select...', '<none>', 'ITEM', '', 'itmNONE')
+	O4WListBox(ids,  ids, 'ITEM')
+End Else
+	O4WText("<No records found>")
+end
+return
+--[begin_sep::drocer_tide_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_EDIT_RECORD"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_EDIT_RECORD*18450.427037037",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_EDIT_RECORD",
+      "updatedOn"      : "24 JAN 2019 10:15",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_EDIT_RECORD"],
+      "uses"           : ["SYSPROG*STPROCINS**O4WEQUATES",
+                          "SYSPROG*STPROCINS**O4WMESSAGEEQUATES",
+                          "SYSPROG*STPROCINS**O4WLOCKEQUATES"],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

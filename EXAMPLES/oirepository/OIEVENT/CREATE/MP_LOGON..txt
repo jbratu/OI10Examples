@@ -1,0 +1,70 @@
+*// We'll only have one user for this application, so let just read the record.
+
+    Call Send_Event   ( @Window, "READ" )
+    Call Set_Property ( @Window, "SAVEWARN", 0 )
+
+return 1
+--[begin_sep::.nogol_pm*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "MP_LOGON."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CREATE*MP_LOGON.*18252.5825925926",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_LOGON. CREATE event script",
+      "updatedOn"      : "05 JAN 2018 09:47",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*MP_LOGON.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*MP_LOGON.",
+                          "EXAMPLES*OIWIN**MP_LOGON"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

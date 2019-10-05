@@ -1,0 +1,71 @@
+*// Re-Enable the Customers button on the main MDI Frame
+
+  frame = Get_Property ( @Window, "MDIFRAME" )
+
+  Call Set_Property ( frame : ".BTN_ORDERS", "ENABLED", 1 )
+
+RETURN 1
+--[begin_sep::.sredro_weivdirg_pm*esolc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLOSE",
+         "entityID"   : "MP_GRIDVIEW_ORDERS."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLOSE*MP_GRIDVIEW_ORDERS.*18275.5679513889",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_GRIDVIEW_CUSTOMERS. CLOSE event script",
+      "updatedOn"      : "12 JAN 2018 13:54",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CLOSE*MP_GRIDVIEW_ORDERS.",
+                          "EXAMPLES*OIEVENTEXE*CLOSE*MP_GRIDVIEW_ORDERS.",
+                          "EXAMPLES*OIWIN**MP_GRIDVIEW_ORDERS"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

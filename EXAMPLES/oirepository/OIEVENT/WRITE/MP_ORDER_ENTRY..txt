@@ -1,0 +1,66 @@
+CALL ORDER_ENTRY_EVENTS(CtrlEntId,'WRITE')
+RETURN 1
+--[begin_sep::.yrtne_redro_pm*etirw*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "WRITE",
+         "entityID"   : "MP_ORDER_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*WRITE*MP_ORDER_ENTRY.*18275.5803472222",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "ORDER_ENTRY",
+      "updatedOn"      : "12 JAN 2018 13:55",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*WRITE*MP_ORDER_ENTRY.",
+                          "EXAMPLES*OIEVENTDBG*WRITE*MP_ORDER_ENTRY."],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

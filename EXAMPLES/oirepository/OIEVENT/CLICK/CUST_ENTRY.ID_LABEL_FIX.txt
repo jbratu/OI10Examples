@@ -1,0 +1,81 @@
+Declare Function Repository, POPUP
+
+*// Launch the Customer ID Popup and pass the user's selection to the ID editline.
+
+    repos_key = @appid<1>:'*POPUP**CUSTOMER_ID_POPUP'
+
+    keys = popup(@window, '', 'CUSTOMER_ID_POPUP')
+
+    if keys then
+
+	    .id_fix->defprop=keys
+
+	    Call Send_Event(@window:'.ID_FIX', 'LOSTFOCUS')
+
+    End
+
+RETURN 1
+--[begin_sep::xif_lebal_di.yrtne_tsuc*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "CUST_ENTRY.ID_LABEL_FIX"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*CUST_ENTRY.ID_LABEL_FIX*18252.7490972222",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY.ID_LABEL_FIX CLICK event script",
+      "updatedOn"      : "20 DEC 2017 17:58",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**CUST_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*CUST_ENTRY.ID_LABEL_FIX",
+                          "EXAMPLES*OIEVENTDBG*CLICK*CUST_ENTRY.ID_LABEL_FIX"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

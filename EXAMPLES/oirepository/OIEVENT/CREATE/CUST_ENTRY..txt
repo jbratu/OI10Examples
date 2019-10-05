@@ -1,0 +1,106 @@
+declare function   Get_Property
+declare subroutine Set_Property, Utility, Send_Event
+
+$insert PS_Equates
+$Insert Logical
+
+*// Some fields are required, but we'll let the user tab by them and just check for 
+*// required fields on the Write Event.  The IOOPTIONS property handles that for us. 
+*// We show the shorthand below.
+
+    atWindow = CtrlEntId[1,'.']
+
+*// Set the validation
+
+    options = @atWindow->iooptions
+    options<10> = 1
+    @atWindow->iooptions = options
+
+*// Set Focus on key field
+
+    idField = atWindow:'.ID_FIX'
+    Send_Event(idField,'GOTFOCUS',CtrlEntId)
+    .id_fix->focus=1
+
+*// Build a full list of Towns for the Towns Combobox. We will modify it each time the dropdown event is fired
+*// and we will restore it each time the form is read.  Again, we will use shorthand code.
+
+    orig_list = .TOWN->LIST
+    .TOWN->@ORIG_LIST = orig_list
+
+*/ Set the frame to not allow the users to change the size
+
+    CurSize = Get_Property(@Window, "SIZE")
+
+    MinW = CurSize<3>
+    MinH = CurSize<4>
+    MaxW = CurSize<3>
+    MaxH = CurSize<4>
+
+    x = Set_Property(@Window,"TRACKINGSIZE",MinW:@FM:MinH:@FM:MaxW:@FM:MaxH)
+    
+return 1
+--[begin_sep::.yrtne_tsuc*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "CUST_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY",
+      "updatedOn"      : "22 DEC 2017 01:24",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*CUST_ENTRY.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*CUST_ENTRY.",
+                          "EXAMPLES*OIWIN**CUST_ENTRY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,95 @@
+compile insert MP3_MP3OCX
+* Insert for the ImpulseMP3.ISMP3Player OLE Control
+
+
+* Control Name
+EQU MP3PLAYERCONTROL$ to ".MP3OCX"
+
+* Properties
+EQU FileName$ 	to "OLE.MPEGFileName"
+EQU Title$ 			to "OLE.ID3TagTitle"
+EQU Artist$ 		to "OLE.ID3TagArtist"
+EQU Album$ 			to "OLE.ID3TagAlbum"
+EQU Comments$ 	to "OLE.ID3TagComment"
+EQU Genre$ 			to "OLE.ID3TagGenre"
+EQU Year$ 			to "OLE.ID3TagYear"
+EQU Length$ 		to "OLE.MPEGLength"
+EQU Position$		to "OLE.MP3GetPositionMins"
+EQU GetVolume$  to "OLE.MP3GetVolume"
+
+
+* Methods
+EQU About$ 						to "About"
+EQU Play$							to "MP3Play"
+EQU Pause$						to "MP3Pause"
+EQU IsPlaying$				to "IsPlaying"
+EQU Stop$							to "MP3Stop"
+EQU Volume$						to "MP3SetVolume"
+EQU Open$							to "MP3Open"
+EQU ActTime$					to "ActTime"
+EQU Close$						to "MP3Close"
+
+* Events
+EQU FinishedPlaying$	to "ThreadEnded"
+--[begin_sep::xco3pm_3pm**snicorpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROCINS",
+         "classID" : "",
+         "entityID"   : "MP3_MP3OCX"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROCINS**MP3_MP3OCX*12704.9090162037",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROCINS**MP3_MP3OCX",
+      "updatedOn"      : "15 OCT 2002 14:36",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROC**MP3_PLAYER"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

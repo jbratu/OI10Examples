@@ -1,0 +1,77 @@
+Declare Function ShellExecute
+
+*//	Obtain the web site address from the www edit box and then
+*//	launch the users default web browser passing in the web site
+*//	address to launch in the browser.
+
+	website = .EDL_WWW->text
+	hwnd    = Get_Property(@Window, "HANDLE")
+	showCmd = 0
+
+	rv      = ShellExecute(hwnd, "open":\00\, website:\00\, "":\00\, "":\00\, showCmd)
+
+RETURN 0
+--[begin_sep::61_txet.yrtne_tsuc*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "CUST_ENTRY.TEXT_16"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*CUST_ENTRY.TEXT_16*18252.7838078704",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY.TEXT_16 CLICK event script",
+      "updatedOn"      : "20 DEC 2017 18:48",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**CUST_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*CUST_ENTRY.TEXT_16",
+                          "EXAMPLES*OIEVENTDBG*CLICK*CUST_ENTRY.TEXT_16"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

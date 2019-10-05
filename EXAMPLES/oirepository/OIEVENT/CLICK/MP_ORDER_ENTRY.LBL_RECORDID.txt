@@ -1,0 +1,75 @@
+declare function  Repository
+
+repos_key = @appid<1>:'*POPUP**ORDER_POPUPS'
+keys = Repository('EXECUTE', repos_key, @WINdow)
+
+if keys then
+	.EDL_ORDERNO->text=keys
+	Call Send_Event(@window, 'READ')
+End
+
+RETURN 1
+--[begin_sep::didrocer_lbl.yrtne_redro_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_ORDER_ENTRY.LBL_RECORDID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_ORDER_ENTRY.LBL_RECORDID*18275.5803472222",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "ORDER_ENTRY.ID_LABEL CLICK event script",
+      "updatedOn"      : "12 JAN 2018 13:55",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_ORDER_ENTRY.LBL_RECORDID",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_ORDER_ENTRY.LBL_RECORDID"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

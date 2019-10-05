@@ -1,0 +1,69 @@
+declare subroutine Set_Property
+
+*// This code is used to make sure that the correct tab is highlighted.  
+    Set_Property ( @Window : ".TABCONTROL_1", "VALUE", PageNum )
+
+return 1
+--[begin_sep::.yrtne_tsuc*degnahcegap*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "PAGECHANGED",
+         "entityID"   : "CUST_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*PAGECHANGED*CUST_ENTRY.*18274.4039930556",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY. PAGECHANGED event script",
+      "updatedOn"      : "11 JAN 2018 09:41",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**CUST_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*PAGECHANGED*CUST_ENTRY."],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

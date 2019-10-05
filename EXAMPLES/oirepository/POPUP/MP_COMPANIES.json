@@ -1,0 +1,156 @@
+{
+
+   "popup" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "POPUP",
+         "classID" : "",
+         "entityID"   : "MP_COMPANIES"
+      },
+      "col"     : "-1",
+      "row"     : "-1",
+      "width"   : "-1",
+      "height"  : "-1",
+      "bkColor" : "16777215",
+      "font" : {
+         "name"            : "Tahoma",
+         "height"          : "-11",
+         "weight"          : "400",
+         "italic"          : "0",
+         "underline"       : "0",
+         "width"           : "0",
+         "charSet"         : "0",
+         "pitchAndFamily"  : "34",
+         "strikeOut"       : "0",
+         "outPrecision"    : "3",
+         "clipPrecision"   : "2",
+         "quality"         : "1",
+         "ascent"          : "0",
+         "internalLeading" : "0",
+         "externalLeading" : "0",
+         "maxCharWidth"    : "0"
+      },
+      "file" : {
+         "tableName" : "CUSTOMERS"
+      },
+      "display" : {
+         "T" : {
+            "filter" : "BY @ID"
+         }
+      },
+      "format" : [
+         {
+            "column" : {
+               "id"                   : "ID",
+               "width"                : "14",
+               "textJustfication"     : "R",
+               "headingJustification" : "C",
+               "oconv"                : "",
+               "heading"              : "ID"
+            }
+         },
+         {
+            "column" : {
+               "id"                   : "COMPANY",
+               "width"                : "20",
+               "textJustfication"     : "L",
+               "headingJustification" : "C",
+               "oconv"                : "",
+               "heading"              : "COMPANY"
+            }
+         }
+      ],
+      "mode"            : "T",
+      "select"          : "1",
+      "title"           : "CUSTOMERS Popup",
+      "returnColumn"    : "",
+      "returnType"      : "K",
+      "columnHeader"    : "1",
+      "rowNumbers"      : "1",
+      "rowButtons"      : "1",
+      "horizontalGrid"  : "1",
+      "verticalGrid"    : "1",
+      "resize"          : "1",
+      "border"          : "1",
+      "buttonsBelow"    : "0",
+      "search"          : "1",
+      "sort"            : "1",
+      "lockedColumns"   : "0",
+      "userDefined"     : "",
+      "showMissing"     : "0",
+      "showPrint"       : "0",
+      "showGauge"       : "0",
+      "captureEsc"      : "0",
+      "greenBar"        : "1",
+      "oddRowColor"     : "8454016",
+      "evenRowColor"    : "16777215",
+      "customText"      : "",
+      "customProc"      : "",
+      "initProc"        : "",
+      "icon"            : "",
+      "foreColor"       : "",
+      "version"         : "",
+      "frameStyle"      : "",
+      "emptyText"       : "",
+      "asyncID"         : ""
+   },
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "POPUP",
+         "classID" : "",
+         "entityID"   : "MP_COMPANIES"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*POPUP**MP_COMPANIES*15405.5138078704",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "Popup",
+      "updatedOn"      : "05 MAR 2010 12:20",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

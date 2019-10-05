@@ -1,0 +1,71 @@
+declare subroutine Print_Invoice
+
+winName = CtrlEntID[1,'.']
+invoice = Get_Property(winName:'.ID','DEFPROP')
+Print_Invoice(winName,invoice)
+
+RETURN 1
+--[begin_sep::eciovni_tnirp_ntb.yrtne_vni_pm*nwodpord*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DROPDOWN",
+         "entityID"   : "MP_INV_ENTRY.BTN_PRINT_INVOICE"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DROPDOWN*MP_INV_ENTRY.BTN_PRINT_INVOICE*18275.5948611111",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "INV_ENTRY.BTN_PRINT_INVOICE DROPDOWN event script",
+      "updatedOn"      : "12 JAN 2018 14:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_INV_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*DROPDOWN*MP_INV_ENTRY.BTN_PRINT_INVOICE",
+                          "EXAMPLES*OIEVENTDBG*DROPDOWN*MP_INV_ENTRY.BTN_PRINT_INVOICE"],
+      "uses"           : ["EXAMPLES*STPROC**PRINT_INVOICE"],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

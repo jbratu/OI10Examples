@@ -1,0 +1,79 @@
+*// Let's check for a Due Date and set it to the invoice date plus 30 days if none present.
+    valCheck = Get_Property ( @Window : ".DTE_DUEDATE", "CHECK" )
+
+    If valCheck = 0 Then
+        *// Set the date to date invoiced plus 30 days
+            valDate = Get_Property ( CtrlEntID, "VALUE" )
+            valNewDate = valDate + 30
+            Call Set_Property ( @Window : ".DTE_DUEDATE", "VALUE", valNewDate)
+            Call Set_Property ( @Window : ".DTE_DUEDATE", "CHECK", 1 )
+    
+    End Else
+        *// Do nothing and leave the user to change the due date.
+    End
+
+return 1
+--[begin_sep::etadeciovni_etd.yrtne_vni_pm*degnahc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CHANGED",
+         "entityID"   : "MP_INV_ENTRY.DTE_INVOICEDATE"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CHANGED*MP_INV_ENTRY.DTE_INVOICEDATE*18275.5948611111",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "INV_ENTRY.DTE_INVOICEDATE CHANGED event script",
+      "updatedOn"      : "12 JAN 2018 14:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_INV_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CHANGED*MP_INV_ENTRY.DTE_INVOICEDATE",
+                          "EXAMPLES*OIEVENTDBG*CHANGED*MP_INV_ENTRY.DTE_INVOICEDATE"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

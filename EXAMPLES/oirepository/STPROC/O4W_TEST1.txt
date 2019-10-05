@@ -1,0 +1,107 @@
+Subroutine O4W_TEST1(CtrlEntID, Event, Request)
+
+$Insert O4WCommon
+$Insert O4WEquates
+$Insert O4WConfigEquates
+
+Begin Case
+	Case Event _eqc "CREATE"
+	* Initial Form Creation
+	O4WForm()
+	O4WHeader("OpenInsight for Web: About", 3)
+	O4WBreak()
+	O4WBreak()
+	O4WText("Please enter your personal login details.")
+	O4WBreak()
+	
+	O4WBreak()
+	O4WLink("Home Page", "", "http://www.revsoft.co.uk")
+	
+	O4WTableStart ("table1", O4WTableStyle("", "", "", "1") )
+	O4WSetCell(1,1); O4WText("User name: ")
+	O4WSetCell(1,2); O4WTextbox("", "", "", "", "uname", "")
+	O4WSetCell(2,1); O4WText("Password:")
+	O4WSetCell(2,2); O4Wpwdbox("", "", "", "", "password", "")
+	O4WSetCell(3,2)
+		O4WButton("Login", "BTNLOGIN", O4WInputStyle("", "", "", "", 1))
+		O4WTableEnd("table1")
+		
+		O4WQualifyEvent("BTNLOGIN", "CLICK", "", "")
+	
+	Case Event _eqc "CLICK"
+		Begin Case
+			Case CtrlEntID = "BTNLOGIN"
+			O4WResponse()
+			
+			userName = O4WGetValue ("uname")
+			passwd   = O4WGetValue ("password")
+			
+			debug
+			
+		End Case
+	
+End Case
+
+Return
+--[begin_sep::1tset_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_TEST1"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_TEST1*15690.6262847222",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_TEST1",
+      "updatedOn"      : "24 JAN 2019 10:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_TEST1"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

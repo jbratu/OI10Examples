@@ -1,0 +1,88 @@
+declare subroutine Send_Event
+*---
+* some fields are required, but we'll let the user tab by them and just check for 
+* required fields on the Write Event.
+* the IOOPTIONS property handles that for us.
+*---
+
+options = @@Window->iooptions
+
+options<10> = 1
+
+@@Window->iooptions = options
+
+*---
+* if this window is created from the dialog_box function from the CUST_ENTRY screen it will pass in a key 
+* for a specific record to be displayed
+*---
+
+if len(CreateParam) then
+	.id->defprop = CreateParam
+	Send_Event(@window,"READ")
+end
+
+RETURN 1
+--[begin_sep::.yrtne_vni*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "INV_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "INV_ENTRY",
+      "updatedOn"      : "20 DEC 2017 13:37",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**INV_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CREATE*INV_ENTRY.",
+                          "EXAMPLES*OIEVENTDBG*CREATE*INV_ENTRY."],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

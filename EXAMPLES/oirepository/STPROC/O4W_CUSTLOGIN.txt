@@ -1,0 +1,155 @@
+Subroutine O4W_CUSTLOGIN(CtlEntId, Event, Request)
+*
+* O4W Example code: login screen
+*
+$Insert O4WCommon
+$Insert O4WEquates
+*
+*
+Begin Case
+	Case EVENT _EQC "CREATE"
+		O4WForm()
+		* Have we already logged in?
+		loginCookie = O4WCookie("tempCookie")
+		If loginCookie <> "" Then
+			* we've already had our cookie set; we must have logged in already
+			* get the information stored in our temp file (referenced by the cookie)
+			Read userInfo From O4WTempFile%, loginCookie Then
+				* found the information from the successful login; go ahead and display the menu
+				userName = userInfo<1>
+				userPrivileges = userInfo<2>
+				* display the menu
+				O4WMenu("SAMPLE_MENU")
+				* and some welcome text
+				O4WHeader("Welcome, ":userName, 4)
+				O4WBreak()
+				O4WBreak()
+				O4WText("Please select an option from the menu to continue")
+				Return 0
+			End
+			* Couldn't read our user information record from the temp file?
+			* Must have been a false alarm; fall through to the login page
+		end
+		O4WHeader("O4W Customer Login":@VM:"Login Please", 4)
+		O4WTableStart("loginTable", O4WTableStyle("", "", "", "1"))
+		O4WText("User name: ")
+		O4WSetCell(1,2)
+		O4WTextBox("", '', '', '', "uname")
+		O4WSetCell(2,1)
+		O4WText("Password: ")
+		O4WSetCell(2,2)
+		O4WPwdBox("", '', '', '', "pwd")
+		O4WSetCell(3,2)
+		O4WButton("Login", "BTNLOGIN", O4WInputStyle('','','','',1))
+		O4WTableEnd("loginTable")
+		O4WQualifyEvent("BTNLOGIN", "CLICK")
+		* Define an empty section for any messages we might have to issue
+		O4WSectionStart("msgArea", O4WMarkedStyle('','0'))
+		O4WSectionEnd("msgArea")
+	Case EVENT _EQC "CLICK"
+		Begin Case
+			Case CtlEntId _eqc "BTNLOGIN"
+				O4WResponse()
+				* evaluate what the user entered
+				userName = O4WGetValue("uname")
+				passwd = O4WGetValue("pwd")
+				bIsBad = 1
+				userPrivileges = ""
+				* given the username and password, validate this user
+				* normally done by looking in a table and verifying that the passwords match
+				onfileInfo = Xlate("MYUSERTABLE", userName, "", "X")
+				If onFileInfo <> "" Then
+					If passwd = onFileInfo<1> And passwd <> "" Then
+						* this user is ok to proceed
+						bIsBad = 0
+						* record what "permissions level" they have as well (in case we need to allow different "levels" of users)
+						userPrivileges = onFileInfo<2>
+					End
+				end
+				If bIsBad then
+					* Bad - display error in the "msgArea"
+					O4WSectionStart("msgArea", O4WResponseStyle():O4WMarkedStyle('','0'))
+					O4WText("Invalid logon - please retry", '', O4WColors("","","red"))
+					O4WSectionEnd("msgArea")
+					RETURN
+				End
+				* Success! Record login status in our temp file so we can find this information later
+				* first, build a unique ID that we can use as our key to the temp table
+				tempKey = O4WGenerateID("LOGIN")
+				* and save it into our cookie
+				O4WCookie("tempCookie", tempKey)
+				* now save the user information into the temp table with this key
+				cfgInfo = ""
+				CFGINFO<1> = username
+				CFGINFO<2> = userPrivileges
+				Write CFGINFO On O4WTempFile%, tempKey
+				* force redisplay of this page to properly display the menu
+				O4WRedirect("O4W_CUSTLOGIN")
+		End case
+End CASE
+*
+Return 0
+--[begin_sep::nigoltsuc_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_CUSTLOGIN"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_CUSTLOGIN*18450.4263078704",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_CUSTLOGIN",
+      "updatedOn"      : "24 JAN 2019 10:15",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_CUSTLOGIN"],
+      "uses"           : ["SYSPROG*STPROCINS**O4WEQUATES",
+                          "SYSPROG*STPROCINS**O4WMESSAGEEQUATES",
+                          "SYSPROG*STPROCINS**O4WLOCKEQUATES"],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

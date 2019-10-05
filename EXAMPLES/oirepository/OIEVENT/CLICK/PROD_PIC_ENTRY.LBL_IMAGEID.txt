@@ -1,0 +1,78 @@
+Declare Function Utility
+
+*// Open the Windows Explorer to enable the user to navigate to and pick
+*// an image file and return the files path to the EDL_IMAGEPATH prompt.
+
+    CFOpt = ""
+    CFOpt<1> = 0 ;* Open Mode
+    CFOpt<2> = "PNGS (*.png)/*.png/JPEGS (*.jpg)/*.jpg/Bitmaps (*.bmp)/*.bmp/All Files (*.*)/*.*/"
+
+    getBmpFile = Utility("CHOOSEFILE", @Window, CFOpt)
+    
+    Call Set_Property (@Window : ".EDL_IMAGEPATH", "TEXT", getBmpFile)
+
+RETURN 0
+--[begin_sep::diegami_lbl.yrtne_cip_dorp*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "PROD_PIC_ENTRY.LBL_IMAGEID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*PROD_PIC_ENTRY.LBL_IMAGEID*18253.8067708333",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_TEST.LBL_IMAGEID CLICK event script",
+      "updatedOn"      : "21 DEC 2017 19:21",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**PROD_PIC_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*PROD_PIC_ENTRY.LBL_IMAGEID",
+                          "EXAMPLES*OIEVENTDBG*CLICK*PROD_PIC_ENTRY.LBL_IMAGEID"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

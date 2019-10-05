@@ -1,0 +1,111 @@
+Declare Function Create, Get_Property, Send_Message
+$Insert Colors
+
+*// Update the Status Line.
+  Call Send_Info("Loading data, please wait . . .")
+
+*//	Get all of the records from the Contacts table and populate the edittable.
+    Open "PRODUCTS" To vProducts Then
+	    EoF = 0
+	    DataArray    = ""
+
+	    Select vProducts
+	    DataArray=space(1000000)
+	    Ptr=1
+
+	    Loop
+		    ReadNext Id Else EoF = 1
+	        Until EoF Do
+		        Read Row From vProducts, Id Then
+
+			    newRow = ID :@VM: oconv(row<2>,"MD2") :@VM: row<1> : @Fm
+
+                    lenNewRow = len(newRow)
+                    dataArray[ptr, lenNewRow] = newRow
+                    ptr += lenNewRow
+		        End Else
+			        Call Fsmsg()
+		        End
+	    Repeat
+
+	    dataArray=trimb(dataArray)
+	    dataArray[-1,1]=""
+
+	    CtrlArray = @Window : ".TBL_MAIN"
+	    PropArray = "LIST"
+
+	    Call Set_Property(CtrlArray, PropArray, DataArray)
+
+    End
+
+*// Sort the Company column.
+    Call Set_Property ( @Window : ".TBL_MAIN", "SORTEDCOL", 3:@fm:1)
+
+*// Update the Status Line.
+    Call Send_Info("Ready.")
+
+RETURN 0
+--[begin_sep::.stcudorp_weivdirg_pm*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "MP_GRIDVIEW_PRODUCTS."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CREATE*MP_GRIDVIEW_PRODUCTS.*18275.4765393519",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*CREATE*MP_GRIDVIEW_CUSTOMERS.",
+      "updatedOn"      : "12 JAN 2018 13:05",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*MP_GRIDVIEW_PRODUCTS.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*MP_GRIDVIEW_PRODUCTS.",
+                          "EXAMPLES*OIWIN**MP_GRIDVIEW_PRODUCTS"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

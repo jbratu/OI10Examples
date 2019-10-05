@@ -1,0 +1,122 @@
+Function Get_Default(Void)
+/* --------------------------------------------------------------------------
+
+  This  program  is  proprietary and is not  to be used  by or  disclosed to others, nor is it to be copied
+  without written permission from Revelation Technologies, Inc.
+
+ VERSION    : OI 4.0.1
+
+ PURPOSE    : This is a stored procedure returns a default price for a product. 
+
+ AUTHOR     : Revelation Software
+
+ CREATED    : January, 2002
+
+ PROCEDURES : This module may be called either as a stored procedure
+              or as an internal subroutine.
+
+ WARNINGS   : Must run in event context. 
+
+ THEORY OF OPERATION :
+			
+			Hook it up to a controls 'DEFAULT'
+    
+     
+ COMMENTS :
+
+ REVISION HISTORY           (Most CURRENT first) :
+
+    DATE       IMPLEMENTOR     FUNCTION
+  --------     -----------     --------
+  MM-DD-YY     initials        Modification
+
+---------------------------------------------------------------------------*/
+
+DECLARE Function Get_Property
+
+*---
+* find out which control has focus
+*---
+focus = Get_Property('SYSTEM', 'FOCUS')
+
+*---
+* find out which row we're working on
+*---
+rowdata = get_property(focus, 'ROWDATA')
+
+*---
+* Get the product id
+*---
+prod_id = rowdata<1> 
+
+*---
+* get the price
+*---	
+@ANS = Xlate('PRODUCTS',  prod_ID, "PRICE",  X)
+
+*---
+* return the default
+*---
+Return @ANS
+--[begin_sep::tluafed_teg**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "GET_DEFAULT"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "SYSPROG*STPROC**ADDAREV32MENU",
+      "updatedOn"      : "24 JAN 2019 10:15",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

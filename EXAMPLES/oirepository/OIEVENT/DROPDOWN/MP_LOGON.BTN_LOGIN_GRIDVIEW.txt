@@ -1,0 +1,73 @@
+*// Launch the Main MDI Window with datagrids
+
+    Call Set_Property ( @Window : ".PBAR_LOADING", "VISIBLE", 1 )
+    Call Set_Property ( @Window : ".BTN_LOGIN", "VISIBLE", 0 )
+    Call Set_Property ( @Window : ".BTN_LOGIN_GRIDVIEW", "VISIBLE", 0 )
+
+    Call Start_Window ("MP_MDIMAIN_GRIDVIEW","","")
+
+RETURN 1
+--[begin_sep::weivdirg_nigol_ntb.nogol_pm*nwodpord*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DROPDOWN",
+         "entityID"   : "MP_LOGON.BTN_LOGIN_GRIDVIEW"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DROPDOWN*MP_LOGON.BTN_LOGIN_GRIDVIEW*18252.5797106481",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_LOGON.BTN_LOGIN_GRIDVIEW DROPDOWN event script",
+      "updatedOn"      : "09 JAN 2018 17:18",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*DROPDOWN*MP_LOGON.BTN_LOGIN_GRIDVIEW",
+                          "EXAMPLES*OIEVENTEXE*DROPDOWN*MP_LOGON.BTN_LOGIN_GRIDVIEW",
+                          "EXAMPLES*OIWIN**MP_LOGON"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,78 @@
+Subroutine MP_TEST (value, value2)
+
+*run RLIST "LIST SYSPROCS JUSTLEN 50 WITH ALL [] '$insert' BY @ID", 1
+
+* in a BASIC+ Function:
+
+declare subroutine Rlist
+equ TARGET_ACTIVELIST$ to 5
+RList("SELECT SYSPROCS WITH ALL [] '$insert' BY @ID", |
+      TARGET_ACTIVELIST$, "", "", "")
+if Get_Status() then
+Gosub error_processing
+end
+ 
+
+
+--[begin_sep::tset_pm**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "MP_TEST"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**MP_TEST*16243.4038194444",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**MP_TEST",
+      "updatedOn"      : "20 JUN 2012 09:48",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**MP_TEST"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,107 @@
+Declare Function Create, Get_Property
+
+*//	Get the selected Country and then build an array that is passed to
+*//	the County Combo Box to show only those Counties applicable to that Country.
+
+	Open "MP_SYSTEM_STATES" To vState Then
+
+        Country  = Get_Property ( @WINDOW : ".CMB_COUNTRY","DEFPROP" )
+
+		EoF = 0
+		DataArray    = ""
+		Select vState
+
+		Loop
+			ReadNext Id Else EoF = 1
+		Until EoF Do
+
+			Read Row From vState, Id Then
+
+				If Row<2> = Country Then
+					DataArray<-1> = row<1> ; 
+				End	
+
+			End Else
+
+				Call Fsmsg()
+
+			End
+
+		Repeat
+
+		CtrlArray    =    @Window    :     ".CMB_STATE"
+		PropArray    =    "LIST"
+
+		Call Set_Property(CtrlArray, PropArray, DataArray)
+
+*// Set County to the row number in the dictionary and then set the text of the 
+*// Town combo box to display that value.
+
+	State = @Record<4>
+	Call Set_Property (@window : ".CMB_STATE", "DEFPROP", State)
+
+RETURN 1
+--[begin_sep::etats_bmc.snwot_metsys_pm*sucoftog*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "GOTFOCUS",
+         "entityID"   : "MP_SYSTEM_TOWNS.CMB_STATE"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*GOTFOCUS*MP_SYSTEM_TOWNS.CMB_STATE*18252.8502777778",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_SYSTEM_TOWNS.CMB_STATE GOTFOCUS event script",
+      "updatedOn"      : "05 JAN 2018 11:02",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*GOTFOCUS*MP_SYSTEM_TOWNS.CMB_STATE",
+                          "EXAMPLES*OIEVENTEXE*GOTFOCUS*MP_SYSTEM_TOWNS.CMB_STATE",
+                          "EXAMPLES*OIWIN**MP_SYSTEM_TOWNS"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

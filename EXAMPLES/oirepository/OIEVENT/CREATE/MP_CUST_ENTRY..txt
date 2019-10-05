@@ -1,0 +1,114 @@
+declare function   Get_Property
+declare subroutine Set_Property, Utility, Send_Event
+$insert PS_Equates
+$Insert Logical
+
+*// Some fields are required, but we'll let the user tab by them and just check for 
+*// required fields on the Write Event.  The IOOPTIONS property handles that for us. 
+*// We show the shorthand below.
+
+    atWindow = CtrlEntId[1,'.']
+
+*// Set the validation
+
+    options = @atWindow->iooptions
+    options<10> = 1
+    @atWindow->iooptions = options
+
+*// Set Focus on key field
+
+    idField = atWindow:'.ID_FIX'
+    Send_Event(idField,'GOTFOCUS',CtrlEntId)
+    .id_fix->focus=1
+
+*// Build a full list of Towns for the Towns Combobox. We will modify it each time the dropdown event is fired
+*// and we will restore it each time the form is read.  Again, we will use shorthand code.
+
+    orig_list = .TOWN->LIST
+    .TOWN->@ORIG_LIST = orig_list
+
+*/ Set the frame to not allow the users to change the size
+
+    CurSize = Get_Property(@Window, "SIZE")
+
+    MinW = CurSize<3>
+    MinH = CurSize<4>
+    MaxW = CurSize<3>
+    MaxH = CurSize<4>
+
+    x = Set_Property(@Window,"TRACKINGSIZE",MinW:@FM:MinH:@FM:MaxW:@FM:MaxH)
+    
+*// If this window is created from the dialog_box function from the MP_GRIDVIEW_CUSTOMERS window, it will pass in a key for a
+*// specific record to be displayed.
+	if len(CreateParam) then
+		.ID_FIX->DefProp = CreateParam
+		Set_Property (@Window : ".ID_FIX", "READONLY" 0)
+		Send_Event(@Window, "READ")
+		Set_Property (@Window : ".ID_FIX", "READONLY" 1)
+	end
+    
+return 1
+--[begin_sep::.yrtne_tsuc_pm*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "MP_CUST_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CREATE*MP_CUST_ENTRY.*18272.7242013889",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY",
+      "updatedOn"      : "12 JAN 2018 11:50",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*MP_CUST_ENTRY.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*MP_CUST_ENTRY.",
+                          "EXAMPLES*OIWIN**MP_CUST_ENTRY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

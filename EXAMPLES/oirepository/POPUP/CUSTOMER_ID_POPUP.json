@@ -1,0 +1,156 @@
+{
+
+   "popup" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "POPUP",
+         "classID" : "",
+         "entityID"   : "CUSTOMER_ID_POPUP"
+      },
+      "col"     : "-2",
+      "row"     : "-2",
+      "width"   : "-1",
+      "height"  : "20",
+      "bkColor" : "16777215",
+      "font" : {
+         "name"            : "Segoe UI",
+         "height"          : "-12",
+         "weight"          : "400",
+         "italic"          : "0",
+         "underline"       : "0",
+         "width"           : "0",
+         "charSet"         : "0",
+         "pitchAndFamily"  : "34",
+         "strikeOut"       : "0",
+         "outPrecision"    : "3",
+         "clipPrecision"   : "2",
+         "quality"         : "1",
+         "ascent"          : "",
+         "internalLeading" : "",
+         "externalLeading" : "",
+         "maxCharWidth"    : ""
+      },
+      "file" : {
+         "tableName" : "CUSTOMERS"
+      },
+      "display" : {
+         "T" : {
+            "filter" : "BY ID"
+         }
+      },
+      "format" : [
+         {
+            "column" : {
+               "id"                   : "ID",
+               "width"                : "5",
+               "textJustfication"     : "L",
+               "headingJustification" : "C",
+               "oconv"                : "MD0",
+               "heading"              : "ID"
+            }
+         },
+         {
+            "column" : {
+               "id"                   : "CUSTOMER_NAME",
+               "width"                : "30",
+               "textJustfication"     : "L",
+               "headingJustification" : "C",
+               "oconv"                : "",
+               "heading"              : "Customer Name"
+            }
+         }
+      ],
+      "mode"            : "T",
+      "select"          : "1",
+      "title"           : "Customer Listing",
+      "returnColumn"    : "",
+      "returnType"      : "K",
+      "columnHeader"    : "1",
+      "rowNumbers"      : "1",
+      "rowButtons"      : "1",
+      "horizontalGrid"  : "1",
+      "verticalGrid"    : "1",
+      "resize"          : "1",
+      "border"          : "1",
+      "buttonsBelow"    : "0",
+      "search"          : "1",
+      "sort"            : "1",
+      "lockedColumns"   : "0",
+      "userDefined"     : "",
+      "showMissing"     : "0",
+      "showPrint"       : "1",
+      "showGauge"       : "1",
+      "captureEsc"      : "0",
+      "greenBar"        : "1",
+      "oddRowColor"     : "4294967294",
+      "evenRowColor"    : "4294967294",
+      "customText"      : "",
+      "customProc"      : "",
+      "initProc"        : "",
+      "icon"            : "",
+      "foreColor"       : "0",
+      "version"         : "1000",
+      "frameStyle"      : "",
+      "emptyText"       : "",
+      "asyncID"         : ""
+   },
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "POPUP",
+         "classID" : "",
+         "entityID"   : "CUSTOMER_ID_POPUP"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "Popup",
+      "updatedOn"      : "09 JAN 2018 14:27",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

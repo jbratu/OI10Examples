@@ -1,0 +1,92 @@
+Declare Function Start_MDIChild
+
+*// Clear any text in the find edit line on the Window.
+
+    MDIChildID = "MP_GRIDVIEW_CUSTOMERS"
+    Call Set_Property ( MDIChildID : ".EDL_FILTER", "TEXT", "" )
+
+*// Make the Customers window visible
+
+    Call Set_Property ( "MP_GRIDVIEW_CUSTOMERS", "VISIBLE", 3)
+
+*// Ensure the other main MDI_Child windows are made invisible.
+
+    *Call Set_Property ( "MP_GRIDVIEW_CUSTOMERS", "VISIBLE", 0 )
+    Call Set_Property ( "MP_GRIDVIEW_PRODUCTS", "VISIBLE", 0 )
+    Call Set_Property ( "MP_GRIDVIEW_ORDERS", "VISIBLE", 0 )
+    Call Set_Property ( "MP_GRIDVIEW_INVOICES", "VISIBLE", 0 )
+    Call Set_Property ( "MP_GRIDVIEW_REPORTS", "VISIBLE", 0 )
+
+    *// Disable and enable window launch buttons as appropriate.
+
+    Call Set_Property ( @Window : ".BTN_CUSTOMERS", "ENABLED", 0 )
+    Call Set_Property ( @Window : ".BTN_PRODUCTS", "ENABLED", 1 )
+    Call Set_Property ( @Window : ".BTN_ORDERS", "ENABLED", 1 )
+    Call Set_Property ( @Window : ".BTN_INVOICES", "ENABLED", 1 )
+    Call Set_Property ( @Window : ".BTN_REPORTS", "ENABLED", 1 )
+
+RETURN 1
+--[begin_sep::sremotsuc_ntb.weivdirg_niamidm_pm*nwodpord*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DROPDOWN",
+         "entityID"   : "MP_MDIMAIN_GRIDVIEW.BTN_CUSTOMERS"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DROPDOWN*MP_MDIMAIN_GRIDVIEW.BTN_CUSTOMERS*18272.7071990741",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*DROPDOWN*MP_MDIMAIN_GRIDVIEW.BTN_CUSTOMERS",
+      "updatedOn"      : "12 JAN 2018 14:48",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*DROPDOWN*MP_MDIMAIN_GRIDVIEW.BTN_CUSTOMERS",
+                          "EXAMPLES*OIEVENTEXE*DROPDOWN*MP_MDIMAIN_GRIDVIEW.BTN_CUSTOMERS",
+                          "EXAMPLES*OIWIN**MP_MDIMAIN_GRIDVIEW"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

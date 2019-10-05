@@ -1,0 +1,81 @@
+Declare Function Repository, POPUP
+
+*// Launch the Customer ID Popup and pass the user's selection to the ID editline.
+
+    repos_key = @appid<1>:'*POPUP**MP_POPUP_COUNTRIES'
+
+    keys = popup(@window, '', 'MP_POPUP_COUNTRIES')
+
+    if keys then
+
+	    .EDL_ID->defprop=keys
+
+	    Call Send_Event(@window:'.EDL_ID', 'LOSTFOCUS')
+
+    End
+
+RETURN 1
+--[begin_sep::di_lbl.seirtnuoc_metsys_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_SYSTEM_COUNTRIES.LBL_ID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_SYSTEM_COUNTRIES.LBL_ID*18272.6129166667",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_SYSTEM_COUNTRIES.LBL_ID CLICK event script",
+      "updatedOn"      : "09 JAN 2018 14:44",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CLICK*MP_SYSTEM_COUNTRIES.LBL_ID",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_SYSTEM_COUNTRIES.LBL_ID",
+                          "EXAMPLES*OIWIN**MP_SYSTEM_COUNTRIES"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

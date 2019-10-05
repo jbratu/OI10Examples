@@ -1,0 +1,343 @@
+Subroutine O4W_EXAMPLE3(CtlEntId, Event, Request)
+* Example #3: A simple entry/collection form with some dynamic updates, validation, and images
+*
+* Establish some constants we'll use in the example
+Equ SizeList$ To "Small,Medium,Large"
+Equ SizeCode$ To "S,M,L"
+Equ SizeCost$ To "700,1000,1300"
+*
+Equ ToppingList$ To "Pepperoni,Sausage,Extra Cheese,Mushrooms"
+Equ ToppingCode$ To "P,S,C,M"
+Equ ToppingCost$ To "100,100,50,100"
+*
+* example 3: include some images
+Equ imagePath To "../examples/images/pizza"
+
+* Always include our equates
+$Insert O4WEquates
+
+* example 3: define a 'validation' style that we can use
+requiredStyle = O4WValidateStyle('','required')
+
+*
+* Determine how we were called, and what to do
+*
+Begin Case
+	Case event _eqc "CREATE"
+		* Creation event - called the first time through for each application
+		* Specify that this will generate a full web page		
+		O4WForm()
+      * Define the section that the form will go in
+      O4WSectionStart('mainSection')
+		* Put up the 'header' describing the page
+		O4WHeader("Revelation Software POS (Pizza Ordering System)", 4)
+		* "Space down" a few blank lines
+		O4WBreak()
+		O4WBreak()
+		* Use a table to align everything neatly
+		O4WTableStart("mainTable")
+		* Display a prompt in the first 'cell' of the table
+		O4WSetCell(1,1)
+		O4WText("Delivery Address: ")
+		* And put up a 'textbox' for the response in the next 'cell'
+		O4WSetCell(1,2)
+		* example 3: add in some validation (note that we now provide an "ID" for the textbox, in addition to the "Name")
+		O4WTextbox('', '', '', 'ADD1', "ADD1", requiredStyle)
+		* Repeat for the other desired information
+		* Notice the shortcut: only specifying the 'row number' to O4WSetCell automatically puts you in the first column of that row
+		O4WSetCell(2)
+		O4WText("Address 2:")
+		* Notice the shortcut: if neither the row nor column is specified in O4WSetCell, it automatically puts you in the next column of the current row
+		O4WSetCell()
+		O4WTextbox('','','','ADD2')
+		O4WSetCell(3)
+		O4WText("City:")
+		O4WSetCell()
+		* example 3: add in some validation
+		O4WTextBox('','','','CITY', 'CITY', requiredStyle)
+		O4WSetCell(4)
+		O4WText("State:")
+		O4WSetCell()
+		* O4WTextBox('','','','STATE')
+		* Use a combo box for the state
+		* O4W provides a standard 'states' code record in the standard "configuration" file
+		stateInfo = Xlate("O4WCODES", "CODES_STATES", "", "X")
+		num.states = dcount(stateInfo<1>, @VM)
+		* Define a 'default' value to prompt the user
+		O4WListBox("Select...", "", "STATE")
+		For each.state = 1 To num.states
+			state.name = stateInfo<1,each.state>
+			state.code = stateInfo<2,each.state>
+			O4WListBox(state.name, state.code, "STATE")
+		Next each.state
+		O4WSetCell(5)
+		O4WText("Zip:")
+		O4WSetCell()
+		* example 3: add in another specific validation for zip codes
+		O4WTextBox('','','','ZIP', 'ZIP', O4WValidateStyle('','zip','1'))
+		O4WSetCell(6)
+		O4WText("Pizza Size:")
+		O4WSetCell()
+		* Display a list of choices as radio buttons (allowing only a single choice)
+		* If we wanted to 'hard code' the choices, we could do this:
+		/*
+		O4WRadioButton("Small", "S", "SIZE")
+		O4WRadioButton("Medium", "M", "SIZE")
+		O4WRadioButton("Large", "L", "SIZE")
+		*/
+		* But it's better to drive this from the constants we declared at the top (so we can change them without changing the program logic)
+		NUM.SIZES = DCount(SizeList$, ",")
+		For each.size = 1 To num.sizes
+			this.size = Field(SizeList$, ",", each.size)
+			this.code = Field(SizeCode$, ",", each.size)
+			*O4WRadioButton(this.size, this.code, "SIZE")
+			* identify each radio button with a unique name
+			O4WRadioButton(this.size, this.code, "SIZE", "SIZE_":this.code)
+		Next each.size
+		* example 3: add another cell to contain the image of the pizza
+		O4WSetCell()
+		* example 3: for now, put up the generic cheese image
+		O4WImage("Mmmm...pizza!", imagePath:"L_.jpg",'','','','imagePizza')
+		O4WSetCell(7)
+		O4WText("Toppings:")
+		O4WSetCell()
+		* Display a list of toppings as checkboxes (allowing multiple choices)
+		* If we wanted to 'hard code' the choices, we could do this:
+		/*
+		O4WCheckBox("Pepperoni", "Pepperoni", "TOPPINGS")
+		O4WBreak()
+		O4WCheckBox("Sausage", "Sausage", "TOPPINGS")
+		O4WBreak()
+		O4WCheckBox("Extra Cheese", "ExtraCheese", "TOPPINGS")
+		O4WBreak()
+		O4WCheckBox("Mushrooms", "Mushrooms", "TOPPINGS")
+		*/
+		* But it's better to drive this from the constants we declared at the top (so we can change them without changing the program logic)
+		NUM.TOPPINGS = DCount(ToppingList$, ",")
+		For each.topping = 1 To num.toppings
+			this.topping = Field(ToppingList$, ",", each.topping)
+			this.code = Field(ToppingCode$, ",", each.topping)
+			*O4WCheckBox(this.topping, this.code, "TOPPINGS")
+			* identify each checkbox with a unique name
+			O4WCheckBox(this.topping, this.code, "TOPPINGS", "TOPPINGS_":this.code)
+			O4WBreak()
+		Next each.topping
+		* End the table
+		O4WTableEnd("mainTable")
+		O4WBreak()
+		* define an area where the 'running total' can go
+		O4WSectionStart('runningTotal')
+		O4WSectionEnd('runningTotal')
+		* Display a button for them to submit the order
+		O4WButton("Order!", "BTNORDER")
+		* Tell O4W you wish to be notified when the user clicks on this button
+		* example 3: we don't just want to click the button - we want to validate our validations too
+		*O4WQualifyEvent("BTNORDER", "CLICK")
+		O4WQualifyEvent("BTNORDER", "VALIDATE")
+		* Tell O4W we want to be notified when the size or toppings change
+		O4WQualifyEvent("TOPPINGS", "CHANGE", "CHECKBOX")
+		O4WQualifyEvent("SIZE", "CHANGE", "RADIOBUTTON")
+      * finish up the main section we defined
+      O4WSectionEnd('mainSection')
+      * create a special area for us to use when displaying some response to the user
+      * nothing goes in it now, but we may fill it in later
+      O4WSectionStart('responseArea')
+      O4WSectionEnd('responseArea')
+	Case event _eqc "CLICK"
+		* Click event - called when the button is pressed
+      * Tell O4W we'll be generating a response updating the current form (as opposed to making a whole new form)
+      O4WResponse()
+		* Read in all the values
+		ADD1 = O4WGetValue("ADD1")
+		ADD2 = O4WGetValue("ADD2")
+		CITY = O4WGetValue("CITY")
+		STATE = O4WGetValue("STATE")
+		ZIP = O4WGetValue("ZIP")
+		* Make sure these values have something in them
+		If TRIM(ADD1) = "" Or TRIM(CITY) = "" Or TRIM(STATE) = "" Or TRIM(ZIP)="" Then
+			O4WError("Please be sure to enter complete address information before proceeding")
+			Return
+		End
+		* move the extraction of the size and topping values, and the calculation of the cost, to a subroutine so we can call it from the 'change' event too
+		/*
+		* 'SIZE' will return the S/M/L code from the SIZE radio buttons
+		SIZE = O4WGetValue("SIZE")
+		* 'TOPPINGS' will return an @VM-delimited list of the selected toppings
+		TOPPING = O4WGetValue("TOPPINGS")
+		* Calculate the price from the toppings and size selected
+		locate size In SizeCode$ Using "," Setting pos Then
+			cost = Field(SizeCost$,",",pos)
+		End Else
+			* Couldn't find the size in the list?  Report an error to the customer
+			O4WError("We're sorry, but the size '":size:"' doesn't appear to be valid!")
+			Return
+		End
+		* Now find each of the toppings
+		num.toppings = dcount(topping, @VM)
+		For each.topping = 1 To num.toppings
+			this.topping = topping<1,each.topping>
+			Locate this.topping In ToppingCode$ Using "," Setting pos Then
+				cost += Field(ToppingCost$, ",", pos)
+			End Else
+				* Couldn't find the topping in the list?  Report an error
+				O4WError("We're sorry, but the topping '":this.topping:"' doesn't appear to be valid!")
+			End
+		Next each.topping
+		*/
+		Gosub calcTotal
+		If error <> "" Then
+			O4WError(error)
+			Return
+		end
+		* In a 'real' application, you'd now write all the information we collected into a database somewhere
+		orderNum = DATE():"*":TIME()
+		* <WRITE INFORMATION HERE>
+		* Notify the customer that his order has been received, and give him/her the total
+      * We'll put this information into our 'responseArea'
+      * Note that we use a special style so that O4W knows we're updating the previously-defined area (and not asking to create a new one)
+      O4WSectionStart('responseArea', O4WResponseStyle())
+      O4WHeader('Your order number is ':orderNum, 4)
+      O4WBreak()
+      O4WText('Thank you for your order!  Your order total is ':OCONV(cost,'MD2,$'):'.')
+      O4WBreak()
+      O4WText('Please press ')
+      * Build a 'link' to return to the home page
+      O4WLink('here', 0, 'www.revelation.com')
+      O4WText(' to return to the home page')
+      O4WSectionEnd('responseArea')
+      * Display this area as a 'dialog box' to the user
+      O4WDialog('responseArea', 'Thank You')
+	Case event _eqc "CHANGE"
+		* the 'CHANGE' event is triggered when our toppings or size is changed
+		* Update our total cost
+		cost = 0
+		* Because of how we organized our form, all the values are passed to us when we get the CHANGE event
+		Gosub calcTotal
+		If error <> "" Then
+			* display any error message instead of our total
+			O4WError(error)
+			Return
+		end
+		* No error - display the total cost
+		* Tell O4W we're generating an update to the current form and not an entire new form
+		O4WResponse()
+		* example 3: update the image with our current selections
+		O4WImage("Mmmm...pizza!", imagePath:imageType:".jpg",'','','','imagePizza', O4WResponseStyle('','','1'))		
+      * We'll put this information into our 'runningTotal'
+      * Note that we use a special style so that O4W knows we're updating the previously-defined area (and not asking to create a new one)
+      O4WSectionStart('runningTotal', O4WResponseStyle())
+		O4WText("Current Order Total: ":Oconv(cost, "MD2,$"))
+		O4WSectionEnd('runningTotal')
+End Case
+*
+Return 0
+*
+*
+* calcTotal subroutine will pull in the size and toppings info and calculate the cost
+* if any errors occur, the variable "error" will be returned with the error text
+* example 3: also create imageType (with details about which picture to display)
+calcTotal:
+error = ""
+* 'SIZE' will return the S/M/L code from the SIZE radio buttons
+SIZE = O4WGetValue("SIZE")
+* example 3: make sure a size is selected
+If size = "" Then
+   error = "We're sorry, but you must select a size to continue"
+	Return
+End
+
+* 'TOPPINGS' will return an @VM-delimited list of the selected toppings
+TOPPING = O4WGetValue("TOPPINGS")
+* Calculate the price from the toppings and size selected
+locate size In SizeCode$ Using "," Setting pos Then
+	cost = Field(SizeCost$,",",pos)
+End Else
+	* Couldn't find the size in the list?  Report an error to the customer
+	error = "We're sorry, but the size '":size:"' doesn't appear to be valid!"
+	Return
+End
+* Now find each of the toppings
+num.toppings = dcount(topping, @VM)
+For each.topping = 1 To num.toppings
+	this.topping = topping<1,each.topping>
+	Locate this.topping In ToppingCode$ Using "," Setting pos Then
+		cost += Field(ToppingCost$, ",", pos)
+	End Else
+		* Couldn't find the topping in the list?  Report an error
+		error = "We're sorry, but the topping '":this.topping:"' doesn't appear to be valid!"
+		return
+	End
+Next each.topping
+* example 3
+* always show 'large' pizza
+* imageType = size:"_"
+imageType = "L_"
+* don't show anything special for 'extra cheese'
+* If Index(topping, "C", 1) Then imageType := "C"
+If Index(topping, "M", 1) Then imageType := "M"
+If Index(topping, "P", 1) Then imageType := "P"
+If Index(topping, "S", 1) Then imageType := "S"
+Return
+
+--[begin_sep::3elpmaxe_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_EXAMPLE3"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_EXAMPLE3*15467.6050925926",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_EXAMPLE3",
+      "updatedOn"      : "24 JAN 2019 10:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_EXAMPLE3"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

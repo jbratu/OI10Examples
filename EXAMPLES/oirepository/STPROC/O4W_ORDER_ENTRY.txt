@@ -1,0 +1,621 @@
+Subroutine O4W_ORDER_ENTRY(ctlentid, event, request)
+*
+* O4W coding example
+*
+* Create, edit, or delete records in the ORDERS table
+* URL: http://.../oecgi4.exe/O4W_ORDER_ENTRY
+*
+* Prompt the user for the order number: allow for lookup, manual entry, or left blank => new order
+*
+* Main Program flow: CREATE event (to draw form initially)
+*
+*                    RETURNVALUE event/ONUM if order search button pressed or
+*                    LOSTFOCUS event/ONUM if order number entered explicitly
+*        	            handleOrderNumber {may optionally display dialog if existing record has been changed, and then CLICK\BTN_READ or CLICK\BTN_READ_CANCEL} => loadRecord => retrieveRecord => displayHeader => displayDetails
+*
+*                    RETURNVALUE event/OCUST if customer search button pressed
+*					 CHANGE event/OCUST to update the customer name
+*					 	markAsChanged
+*
+*					 CLICK event/BTN_SEARCH_PROD_<line#> if product search button pressed to ask which type of search
+*					 RETURNVALUE event/ITEM after product search completed
+*				     CHANGE event/ITEM, QTY, or PRICE to update the order details
+*						displayDetails => markAsChanged
+*
+*					 CLICK event/BTN_SAVE to save the record
+*						lockrecord => saverecord => resetpages
+*					 CLICK event/BTN_DELETE to confirm deletion of record => CLICK event/BTN_DELETE2 to delete the record
+*						lockrecord => deleterecord => resetpages
+*					 CLICK event/BTN_CANCEL to reload the original order record
+*						retrieveRecord => displayHeader => displayDetails => markAsFresh
+
+
+* Insert required equates and commons
+$Insert O4WCOMMON
+$Insert O4WEQUATES
+* Since we're going to check the configuration record, include this equate as well
+$Insert O4WConfigEquates
+
+Declare Function Repository
+
+* Open our data and dictionary tables, otherwise we have an error
+Open "ORDERS" To ORDER.TBL Else
+	O4WError("Unable to access ORDERS table")
+	Return 0
+End
+Open "DICT","ORDERS" To @DICT Else
+	O4WError("Unable to access DICT.ORDERS table")
+	Return 0
+End
+
+* define some O4W "styles"
+selectedStyle = O4WMarkedOptions("1")
+deselectedStyle = O4WMarkedOptions("0")
+textReplace = O4WResponseOptions("1")
+textReplaceTrigger = O4WResponseOptions("1", "", "1")
+borderStyle = O4WTableStyle("", "1", "1")
+roStyle = O4WInputOptions("0","1"):O4WColorStyle("", "lightblue")
+size10pct = O4WSizeStyle("", "10%")
+size50pct = O4WSizeStyle("", "50%")
+rtJustn = O4WAlignStyle("", "2")
+
+* retrieve (if set) our unique id
+uniqueID = O4WGetValue("O4WUniqueID")
+
+* read the configuration record (using the appropriate repository method)
+configRec = Repository("ACCESS", @APPID<1>:"*CONFIG*O4W*CFG_O4W")
+Call Set_Status(0)
+* determine the "lock procedure" that has been specified in the configuration record
+LOCK_PROC = configRec<O4WCONFIG_LOCK_PROC$>
+If LOCK_PROC = "" Then LOCK_PROC = "O4WI_LOCKHANDLER"
+
+
+Begin Case
+	Case EVENT _EQC "CREATE"
+		* Generate the base form
+		* Since no template has been explicitly specified, use the default template
+		O4WForm()
+		* Save this variable in the web page
+		O4WStore("", "activeRecord", "activeRecord")
+		* After the O4WForm call, the unique ID has been created - load it in
+		uniqueID = O4WGetValue("O4WUniqueID")
+		
+		* Display a header
+		O4WHeader("Order Entry/Inquiry", 3)
+		* Establish the tabs
+		O4WTabs("orderForm", "orderHeader":@VM:"orderDetails", "Header":@VM:"Details")
+		
+		* Create the header section
+		O4WSectionStart("orderHeader", deselectedStyle)
+		* and a table to contain the order header information
+		O4WTableStart("tableHeader")
+		O4WSetCell(1,1)
+		O4WText("Order Number: ")
+		O4WSetCell()
+		O4WButton("?", "BTN_SEARCH_ORDERS")
+		* Associate a popup with this button
+		O4WPopup("Order Search", O4W_LINKTYPE_POPUP$, "ORDER_POPUPS", "", "orderpopup", "BTN_SEARCH_ORDERS")
+		O4WTextbox("", "", "", "ONUM","ONUM")
+		* Tell O4W we want to be notified when the ONUM textbox has lost focus
+		o4wqualifyevent("ONUM", "LOSTFOCUS")		
+		O4WSetCell(4, 1)
+		O4WText("Customer Number: ")
+		O4WSetCell()
+		O4WButton("?", "BTN_SEARCH_CUST")
+		* Associate a popup with this button too
+		O4WPopup("Customer Search", O4W_LINKTYPE_POPUP$, "CUSTOMER_ID_POPUP", "", "custpopup", "BTN_SEARCH_CUST")
+		O4WTextbox("", "", "", "OCUST", "OCUST")
+		* Tell O4W we want to be notified when the OCUST textbox has changed
+		o4wqualifyevent("OCUST", "CHANGE", "textbox")		
+		O4WSetCell()
+		O4WSetCell(5, 2, "", O4WTableCellOptions(2))
+		* Display a textbox, but mark it as "read only" and style it so that it looks different
+		O4WTextbox("", "40", "", "OCUSTNAME", "OCUSTNAME", roStyle)
+		O4WSetCell(6,1)
+		O4WText("Order Date: ")
+		O4WSetCell()
+		O4WDatePicker("","12","1","","ODATE", "ODATE")
+		O4WTableEnd("tableHeader")
+		O4WSectionEnd("orderHeader")
+		
+		O4WSectionStart("orderDetails", deselectedStyle)
+		* Can't fill in the order details yet (without an order being selected), but set up this section as a placeholder
+		O4WText("Please select an existing or new order...")
+		O4WSectionEnd("orderDetails")
+
+		O4WSectionEnd("orderForm")
+		
+		* Define this section for our special dialogs
+		O4WSectionStart("specialDialog", deselectedStyle)
+		O4WSectionEnd("specialDialog")
+		
+		* Define the buttoms
+		O4WButton("Save", "BTN_SAVE")
+		O4WButton("Delete", "BTN_DELETE")
+		O4WButton("Cancel", "BTN_CANCEL")
+		* And set them so they generate the 'click' event
+		O4WQualifyEvent("BTN_SAVE", "CLICK")
+		O4WQualifyEvent("BTN_DELETE", "CLICK")
+		O4WQualifyEvent("BTN_CANCEL", "CLICK")
+	
+	Case event _eqc "LOSTFOCUS"
+		* Generated when a control loses focus (if the appropriate O4WQualifyEvent on that control has been set)
+		Begin Case
+			Case ctlentid _eqc "ONUM"
+				O4WResponse()
+				@ID = O4WGetValue("ONUM")
+				* Load in the value of the ONUM textbox, and call handleOrderNumber to retrieve that record (if appropriate)
+				Gosub handleOrderNumber
+			End case
+		
+	Case event _eqc "CHANGE"
+		* Generated when a control's value changes (if the appropriate O4WQualifyEvnet on that control has been set)
+		* Note that O4W provides 2 additional values: O4WChangeID (the ID of the control that made the change), and O4WChangeValue (the value it's been changed to)
+		Begin Case
+			Case ctlentid _eqc "OCUST"
+				* Customer # has changed - update our customer name display
+				O4WResponse()
+				@RECORD = ""
+				@ID = O4WGetValue("ONUM")
+				{CUST_NO} = O4WGetValue("O4WChangeValue")
+				O4WUpdate("OCUSTNAME", {CUSTOMER_NAME}, textReplace)
+				* make sure we know that something's changed, so we can't just navigate away from this without being prompted to save our changes
+				Gosub markAsChanged
+				
+			Case ctlentid _eqc "ITEM" Or ctlentid _eqc "QTY" Or ctlentid _eqc "PRICE"
+				* One of our detail lines has been added or changed
+				O4WResponse()
+				* who changed?  which line, which control?  This way, we can determine who to set the focus to...
+				whichOne = O4WGetValue("O4WChangeID")
+				* Our controls are defined as "ITEM_1", "ITEM_2", etc.  However, if a new line has been added, it will have a more complex (auto-generated) ID, such as ITEM_3_o4wid_2
+				If Count(whichOne, "_") > 1 Then
+					* More than one "_" in the ID? This must be a newly-added line
+					changeLine = -1
+				End Else
+					changeLine = Field(whichOne, "_", 2)
+				End
+				* Load in the current contents of all our fields
+				Gosub retrieveCurrentRecord
+				* fill in any defaults, and determine where to set the focus to
+				items = {ITEM}
+				qtys = {QTY}
+				cost = {PRICE}
+				num.items = dcount(items, @VM)
+				For each.item = num.items To 1 step -1
+					* default the quantity and price if they're not set
+					If qtys<1,each.item> = "" Then
+						qtys<1,each.item> = 1
+					End
+					If cost<1,each.item> = "" then
+						cost<1,each.item> = Xlate('PRODUCTS',  items<1,each.item>, "PRICE",  "")
+					end
+				Next each.item
+				{ITEM} = items
+				{QTY} = qtys
+				{PRICE} = cost
+				* Update the "order details" section
+				Gosub displayDetails
+				* now set the focus as appropriate
+				If changeLine = -1 Then
+					* this was a newly-added line, so it's the last value
+					changeLine = dcount(items,@VM)
+				end
+				Begin Case
+					Case ctlentid _eqc "ITEM"
+						O4WFocus("PRICE_":changeLine)
+					Case ctlentid _eqc "PRICE"
+						O4WFocus("QTY_":changeLine)
+					Case ctlentid _eqc "QTY"
+						O4WFocus("ITEM_":(changeLine+1))
+				End Case
+				* Remember to mark us as having been changed, so we can't navigate away and lose our changes without a verification prompt
+				Gosub markAsChanged
+		End Case
+		
+	Case event _eqc "CLICK"
+		* Generated when a button is pressed
+		Begin Case
+			Case ctlentid _eqc "BTN_CANCEL"
+				* Throw away any changes, and reload the original contents of the record?
+				O4WResponse()
+				* Get the ID
+				@ID = O4WGetValue("ONUM")
+				* see if there are any changes, and if there are prompt before reloading
+				Gosub handleOrderNumber
+				
+			Case CTLENTID _EQC "BTN_SAVE"
+				* called when the 'save' button is pressed
+				* make sure we can lock the record, and it hasn't been changed by anyone else since we originally read it in
+				Gosub lockRecord
+				If error = "" Then
+					* No problems - write it out
+					Gosub saveRecord
+					* Display our "update successful" response
+					O4WError("Order '":@ID:"' updated", "Save Order")
+					* blank the fields, mark us as unchanged, and return to first tab
+					Gosub resetPages
+				End
+			Case ctlentid _eqc "BTN_DELETE"
+				* called to delete the record
+				* put up a dialog box to verify the deletion first
+				O4WResponse()
+				* retrieve the item id
+				@ID = O4WGetValue("ONUM")
+				* build our dialog to verify the deletion
+				O4WSectionStart('specialDialog', selectedStyle:O4WResponseStyle())
+				* save the order ID in the dialog
+				O4WStore(@ID, "ONUM", "ONUM")
+				O4WText("Please verify deletion of order '":@ID:"'")
+				O4WBreak()
+				O4WButton("Delete", "BTN_DELETE2", selectedStyle)
+				O4WButton("Cancel", "BTN_DIALOG_CANCEL")
+				* Notify us when these buttons are pressed
+				O4WQualifyEvent("BTN_DELETE2", "CLICK")
+				O4WQualifyEvent("BTN_DIALOG_CANCEL", "CLICK")
+				O4WSectionEnd('specialDialog')
+				* and then show the dialog
+				O4WDialog('specialDialog', 'Confirm Deletion', '', '', 'width:350')
+			Case ctlentid _eqc "BTN_DELETE2"
+				* called after confirming the delete request
+				* first, make sure we can lock the record and no one else has changed it since we read it
+				Gosub lockRecord
+				If error = "" Then
+					* no problems - proceed with the deletion
+					Gosub deleteRecord
+					* display our 'deletion successful' message
+					O4WError("Order '":@ID:"' deleted", "Delete Order")
+					* blank the fields, mark us as unchanged, and return to first tab
+					Gosub resetPages
+				End
+
+			* the following 2 controls are displayed on the "record has changed - do you want to discard these changes" dialog box
+			Case ctlentid _eqc "BTN_READ"
+				* yes, the user wants to discard any changes and load in the new record
+				O4WResponse()
+				* dismiss the dialog box
+				O4WDialog("specialDialog")
+				* retrieve their new ID
+				@ID = O4WGetValue("ONUM")
+				* load in the record
+				Gosub loadRecord
+			Case ctlentid _eqc "BTN_CANCEL_READ"
+				* no, the user does _not_ want to throw away their changes to the current record
+				O4WResponse()
+				* retrieve the original ID
+				origID = O4WGetValue("ID")
+				* dismiss the dialog box
+				O4WDialog("specialDialog")
+				* and just reset the value in the order number textbox
+				O4WUpdate("ONUM", origID, textReplace)
+
+			* this is generated when the 'search' button is pressed in one of the order detail lines
+			* the user is given a choice of search methods
+			Case ctlentid[1,16] _eqc "BTN_SEARCH_PROD_"
+				O4WResponse()
+				* determine which line the user was on (each button is identified with its line number)
+				whichOne = ctlentid[17, Len(ctlentid)]
+				* build a dialog box to ask what type of search to perform
+				O4WSectionStart("specialDialog", O4WResponseOptions())
+				* Note the button contains the line number (so we'll know what to update after the user makes their choice)
+				O4WButton("Search for product by text", "BTN_SEARCH3_PROD_":whichOne)
+				* associate an index lookup popup with this button
+				O4WPopup("Product Search", O4W_LINKTYPE_INDEXLOOKUP$, "", "PRODUCTS":@FM:"DESCRIPTION_XREF":@fm:"ID":@VM:"DESCRIPTION", "prodpopup2", "BTN_SEARCH3_PROD_":whichOne)
+				O4WText(" or ")
+				O4WButton("List all products", "BTN_SEARCH2_PROD_":whichOne)
+				* associate a regular popup with this button
+				O4WPopup("Product Search", O4W_LINKTYPE_POPUP$, "PRODUCT_POPUP", "", "prodpopup1", "BTN_SEARCH2_PROD_":whichOne)
+				* Provide a 'cancel' button to dismiss the dialog
+				O4WBreak()
+				O4WBreak()
+				O4WButton("Cancel", "BTN_DIALOG_CANCEL")
+				* Generate the 'click' event when it's pressed
+				O4WQualifyEvent("BTN_DIALOG_CANCEL", "CLICK")
+				O4WSectionEnd("specialDialog")
+				O4WDialog("specialDialog", "Product Search", '', '', 'width:550')
+				
+			Case ctlentid _eqc "BTN_DIALOG_CANCEL"
+				O4WResponse()
+				* dismiss the dialog box
+				O4WDialog("specialDialog")
+				
+		End Case
+		
+	Case event _eqc "RETURNVALUE"
+		* The user has selected a value from a popup
+		O4WResponse()
+		* determine which control had the popup, and what the user selected
+		callingCtl = O4WGetValue('o4wPopupCtl')
+		popupValue = O4WGetValue('o4wValue')		
+		Begin Case
+			Case callingCtl _eqc "BTN_SEARCH_ORDERS"
+				* this was the order search popup
+				* update the order number with the selected value
+				O4WUpdate("ONUM", popupValue, textReplace)
+				@ID = popupValue
+				* Fill in the rest of the form based on this record ID
+				* If "automatic lose focus" is not desired, disable the following line:
+				Gosub handleOrderNumber
+			Case callingCtl _eqc "BTN_SEARCH_CUST"
+				* this was the customer search popup
+				* update the customer number textbox with the selected value
+				* note the use of the "textReplaceTrigger" style - this not only replaces the text, but also triggers the "change" event
+				* the change event (previously defined) will derive the customer name from this value
+				O4WUpdate("OCUST", popupValue, textReplaceTrigger)
+			Case callingCtl[1,17] _eqc "BTN_SEARCH2_PROD_" Or callingCtl[1,17] _eqc "BTN_SEARCH3_PROD_"
+				* this was either of the 2 different product search popups (regular or index lookup)
+				* first, dismiss the dialog box that asked which type of search to use
+				O4WDialog("specialDialog")
+				* determine which line item in the order details called the popup
+				whichLine = callingCtl[18, Len(callingCtl)]
+				* update the product on that line of the order details, and trigger the "change" event for that item
+				O4WUpdate("ITEM_":whichLine, popupValue, textReplaceTrigger)
+		End case
+		
+End Case
+Return 0
+
+retrieveRecord:
+* call the lockhandler routine to read the original record
+Call @LOCK_PROC(O4W_LOCKHANDLER_ACTION_READ$, order.tbl, @ID, @RECORD,  UniqueID:"*ORDERS*":@id:"*ORIG")
+Return
+
+lockRecord:
+* call the lockhandler routine to lock (if possible) the original record
+* this will verify that the underlying record is unchanged, And we can lock it
+error = "" ;* assume success
+* load in the current ID and record contents from the browser form
+Gosub retrieveCurrentRecord
+* call the lockhandler to see if the record is able to be locked, and is unchanged from its original state
+stat = Function(@lock_proc(O4W_LOCKHANDLER_ACTION_CHECK$, order.tbl, @id, curr.record, UniqueID:"*ORDERS*":@ID:"*ORIG", O4W_LOCKHANDLER_OPTION_LOCK$))
+* check for results from the 'check' call
+If stat = O4W_LOCKHANDLER_NO_LOCK$ Then
+	* couldn't get the lock on this item - let the user choose another ID
+	error = "Unable to lock order '":@ID:"'"
+	O4WError(error)
+	Return
+End
+If stat = O4W_LOCKHANDLER_ITEM_CHANGED$ Then
+	* someone else changed the record while we worked on it - let the user choose another ID
+	error = "Order '":@ID:"' has been changed by another user"
+	* remember to unlock our current record, though
+	Call @LOCK_PROC(O4W_LOCKHANDLER_ACTION_UNLOCK$, order.tbl, @ID)
+	O4WError(ERROR)
+	Return
+End
+Return
+
+saveRecord:
+* call the lockhandler routine to save the modified record
+Call @LOCK_PROC(O4W_LOCKHANDLER_ACTION_WRITE$, ORDER.TBL, @ID, @RECORD, UniqueID:"*ORDERS*":@ID:"*ORIG")
+Return
+
+deleteRecord:
+* delete the record from the orders table, and release any lock
+Delete order.tbl, @ID
+* release the record lock
+Call @LOCK_PROC(O4W_LOCKHANDLER_ACTION_UNLOCK$, ORDER.TBL, @ID)
+Delete O4WTempFile%, UniqueID:"*ORDERS*":@ID:"*ORIG"
+return
+
+retrieveCurrentRecord:
+@ID = O4WGetValue("ONUM")
+@RECORD = ""
+{CUST_NO} = O4WGetValue("OCUST")
+odate = O4WGetValue("ODATE")
+* if no date filled in, use todays date
+If odate = "" Then
+	odate = date()
+End Else
+	odate = Iconv(odate,"D")
+end
+{ORDER_DATE} = odate
+items = O4WGetValue("ITEM")
+qtys = O4WGetValue("QTY")
+prices = O4WGetValue("PRICE")
+* trim off any blank lines
+num.items = dcount(items, @VM)
+For each.item = num.items To 1 step -1
+	If items<1,each.item> = "" Then
+		items = Delete(items, 1, each.item, 0)
+		qtys = Delete(qtys, 1, each.item, 0)
+		prices = Delete(prices, 1, each.item, 0)
+	End
+Next each.item
+{ITEM} = items
+{QTY} = qtys
+{PRICE} = Iconv(prices, "MD2")
+Return
+
+resetPages:
+* blank out the order number
+O4WUpdate("ONUM", "", textReplace)
+@RECORD = ""
+Gosub displayHeader
+* mark as unchanged (as of now)
+Gosub markAsFresh
+* go to the first tab
+O4WGoToTab("orderForm", 1)
+return
+
+handleOrderNumber:
+* do we currently have an 'active' (changed) record in process?
+isActive = O4WGetValue("activeRecord")
+If isActive <> "" Then
+	* yes; build our dialog to verify the change of record
+	O4WSectionStart('specialDialog', selectedStyle:O4WResponseStyle())
+	* save the newly-entered order ID in the dialog
+	O4WStore(@ID, "ONUM", "ONUM")
+	* save the original item ID in the dialog, too
+	O4WStore(isActive, "ID", "ID")
+	O4WText("Discard any changes to existing record?")
+	O4WBreak()
+	O4WButton("Yes, Discard and Load New Record", "BTN_READ", selectedStyle)
+	O4WButton("No, Cancel and Keep Current Record", "BTN_CANCEL_READ")
+	* Notify us when these buttons are pressed with the 'click' event
+	O4WQualifyEvent("BTN_READ", "CLICK")
+	O4WQualifyEvent("BTN_CANCEL_READ", "CLICK")
+	O4WSectionEnd('specialDialog')
+	* and then show the dialog
+	O4WDialog('specialDialog', 'Confirm Discard of Any Changes', '', '', 'width:650')
+	return
+End
+* no, no currently active record - just load in the record for this @ID
+Gosub loadRecord
+Return
+
+loadRecord:
+If @ID = "" Then
+	* new order - get next sequential number
+	Lock @DICT, "%SK%" Else
+		O4WError("Unable to lock sequential counter record")
+		Return
+	END
+	Read NEXT.NUM From @DICT, "%SK%" Else NEXT.NUM = 1000
+	@ID = NEXT.NUM
+	Write NEXT.NUM +1 On @DICT, "%SK%"
+	Unlock @DICT, "%SK%"
+	* Update the text box with this order number
+	O4WUpdate("ONUM", @ID, textReplace)
+End
+* read in the record for this @ID
+Gosub RetrieveRecord	
+* display the header and details
+Gosub displayHeader
+* Mark this record as unchanged (for now)
+Gosub markAsFresh
+* make sure we're on the first tab
+O4WGoToTab("orderForm", 1)
+Return
+
+markAsFresh:
+* turn off the browser page warning
+O4WPlugin("$", "o4wsetConfirmUnload", "false")
+* and clear out our own flag that indicates the record has changed
+o4wUpdate("activeRecord", "", textReplace)
+Return
+
+markAsChanged:
+* tell the browser that we need the "don't navigate away!" warning message
+O4WPlugin("$", "o4wsetConfirmUnload", "true")
+* remember what our current record ID is in case someone tries to change it
+o4wUpdate("activeRecord", @ID, textReplace)
+Return
+
+displayHeader:
+* load up the header fields
+O4WUpdate("OCUST", {CUST_NO}, textReplace)
+O4WUpdate("OCUSTNAME", {CUSTOMER_NAME}, textReplace)
+O4WUpdate("ODATE", Oconv({ORDER_DATE}, "D"), textReplace)
+* and fall through to update the details...
+
+displayDetails:
+* rebuild the section containing our order details
+o4wSectionStart("orderDetails", O4WResponseStyle():deselectedStyle)
+* build a table for our order lines
+O4WTableStart("tableDetails", borderStyle:O4WSizeStyle("","100%"))
+O4WTableHeader("Item", "2", "", size10pct)
+O4WTableHeader("Description", "", "", size50pct)
+O4WTableHeader("Cost", "", "", size10pct)
+O4WTableHeader("Qty", "", "", size10pct)
+O4WTableHeader("Ext Cost")
+num.items = dcount({ITEM}, @vm) +1 ;* always have one blank row at the end
+For each.item = 1 To num.items
+	O4WSetCell(each.item, 1, '', borderStyle)
+	O4WButton("?", "BTN_SEARCH_PROD_":each.item)
+	* display some choices as to what type of popup should be run when this button is pressed
+	O4WQualifyEvent("BTN_SEARCH_PROD_":each.item, "CLICK")	
+	O4WSetCell('', '', '', borderStyle)
+	* mark these with the 'o4wClearDuplicateVal' and 'o4wClearDuplicateText' styles so that the "Add" button clears out these fields when a new row is added
+	O4WTextBox({ITEM}<1,EACH.ITEM>, "", "", "ITEM", "ITEM_":each.item, "o4wClearDuplicateVal")
+	O4WSetCell('','','',borderStyle)
+	O4WText({DESCRIPTION}<1,EACH.ITEM>, "DESC_":each.item, "o4wClearDuplicateText")
+	O4WSetCell('','','',borderStyle)
+	O4WTextBox(Oconv({PRICE}<1,EACH.ITEM>, "MD2,$"), "", "", "PRICE", "PRICE_":each.item, rtJustn:"o4wClearDuplicateVal")
+	O4WSetCell('','','',borderStyle)
+	O4WTextBox({QTY}<1,EACH.ITEM>, "", "", "QTY", "QTY_":each.item, rtJustn:"o4wClearDuplicateVal")
+	O4WSetCell("", "", "", rtJustn:borderStyle)
+	O4WText(Oconv({EXT_COST}<1,EACH.ITEM>, "MD2,$"), "EXT_":each.item, "o4wClearDuplicateText")
+Next each.item
+O4WTableEnd("tableDetails")
+* build another table to display the sub total
+O4WTableStart("tableSummary", O4WSizeStyle("","100%"))
+O4WSetCell(1,1,'', O4WSizeStyle("","90%"))
+O4WSpace(5)
+O4WSetCell(1,2, '', rtJustn:borderStyle)
+O4WText(Oconv({SUB_TOTAL}, "MD2,$"))
+O4WTableEnd("tableSummary")
+O4WButton("Add Row", "BTN_ADD")
+O4WButton("Delete Row", "BTN_DEL")
+* Automatically add or remove the last row when these buttons are pressed
+O4WQualifyEvent("BTN_ADD", "ADDTOTABLE", "tableDetails", "-1")
+O4WQualifyEvent("BTN_DEL", "DELETEFROMTABLE", "tableDetails", "-1")
+* Notify us when any of the ITEM, QTY, or PRICE field values are changed
+O4WQualifyEvent("ITEM", "CHANGE", "textbox")
+O4WQualifyEvent("PRICE","CHANGE", "textbox")
+O4WQualifyEvent("QTY",  "CHANGE", "textbox")
+o4wSectionEnd("orderDetails")
+Return
+--[begin_sep::yrtne_redro_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_ORDER_ENTRY"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_ORDER_ENTRY*18450.4201273148",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_ORDER_ENTRY",
+      "updatedOn"      : "24 JAN 2019 10:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_ORDER_ENTRY"],
+      "uses"           : ["SYSPROG*STPROCINS**O4WEQUATES",
+                          "SYSPROG*STPROCINS**O4WMESSAGEEQUATES",
+                          "SYSPROG*STPROCINS**O4WLOCKEQUATES"],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

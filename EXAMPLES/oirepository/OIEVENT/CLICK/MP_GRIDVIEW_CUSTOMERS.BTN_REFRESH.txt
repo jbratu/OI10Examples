@@ -1,0 +1,113 @@
+Declare Function Create, Get_Property, Send_Message
+$Insert Colors
+
+*// Update the Status Line.
+  Call Send_Info("Loading data, please wait . . .")
+
+*//	Get all of the records from the Contacts table and populate the edittable.
+    Open "CUSTOMERS" To vCustomers Then
+	    EoF = 0
+	    DataArray    = ""
+
+	    Select vCustomers
+	    DataArray=space(1000000)
+	    Ptr=1
+
+	    Loop
+		    ReadNext Id Else EoF = 1
+	        Until EoF Do
+		        Read Row From vCustomers, Id Then
+
+			        calcField1 = xlate( "CUSTOMERS", ID, "CUSTOMER_NAME", "X" )
+
+			        newRow = ID :@VM: row <13> :@VM: calcfield1 :@VM: row<5> :@VM: row<6> :@VM: row<8> :@VM: row<9> :@VM: row<11> : @Fm
+
+                    lenNewRow = len(newRow)
+                    dataArray[ptr, lenNewRow] = newRow
+                    ptr += lenNewRow
+		        End Else
+			        Call Fsmsg()
+		        End
+	    Repeat
+
+	    dataArray=trimb(dataArray)
+	    dataArray[-1,1]=""
+
+	    CtrlArray = @Window : ".TBL_MAIN"
+	    PropArray = "LIST"
+
+	    Call Set_Property(CtrlArray, PropArray, DataArray)
+
+    End
+
+*// Sort the Company column.
+    Call Set_Property ( @Window : ".TBL_MAIN", "SORTEDCOL", 2:@fm:1)
+
+*// Update the Status Line.
+    Call Send_Info("Ready.")
+
+RETURN 0
+--[begin_sep::hserfer_ntb.sremotsuc_weivdirg_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_GRIDVIEW_CUSTOMERS.BTN_REFRESH"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_GRIDVIEW_CUSTOMERS.BTN_REFRESH*18272.73125",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_GRIDVIEW_CUSTOMERS.BTN_REFRESH CLICK event script",
+      "updatedOn"      : "09 JAN 2018 17:41",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CLICK*MP_GRIDVIEW_CUSTOMERS.BTN_REFRESH",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_GRIDVIEW_CUSTOMERS.BTN_REFRESH",
+                          "EXAMPLES*OIWIN**MP_GRIDVIEW_CUSTOMERS"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,168 @@
+{
+
+   "rows" : [
+   {
+      "<1>" : "O4WGRAPH",
+      "<2>" : "15780*35497",
+      "<3>" : "",
+      "<4>" : "",
+      "<5>" : "",
+      "<6>" : "#333399",
+      "<7>" : "#993366",
+      "<8>" : "Sales",
+      "<9>" : "Sales",
+      "<10>" : "(c) Copyright Revsoft 2010",
+      "<11>" : "https:\\www.revsoft.co.uk",
+      "<12>" : "www.revsoft.co.uk",
+      "<13>" : "Sales",
+      "<14>" : "",
+      "<15>" : "0",
+      "<16>" : "MAIN_MENU",
+      "<17>" : "",
+      "<18>" : "60",
+      "<19>" : "1",
+      "<20>" : "2",
+      "<21>" : "2",
+      "<22>" : "",
+      "<23>" : "",
+      "<24>" : "",
+      "<25>" : "",
+      "<26>" : "",
+      "<27>" : "",
+      "<28>" : "",
+      "<29>" : "",
+      "<30>" : {
+         "<30,1>" : "PieChart_3D",
+         "<30,2>" : "ColumnChart"
+      },
+      "<31>" : {
+         "<31,1>" : "400",
+         "<31,2>" : "400"
+      },
+      "<32>" : {
+         "<32,1>" : "300",
+         "<32,2>" : "300"
+      },
+      "<33>" : {
+         "<33,1>" : "Sales By Product",
+         "<33,2>" : "Customer Ranking"
+      },
+      "<34>" : {
+         "<34,1>" : "Products",
+         "<34,2>" : "Sales YTD"
+      },
+      "<35>" : {
+         "<35,1>" : "1",
+         "<35,2>" : "1"
+      },
+      "<36>" : {
+         "<36,1>" : "PRODUCTS",
+         "<36,2>" : "CUSTOMERS"
+      },
+      "<37>" : {
+         "<37,1>" : "SELECT PRODUCTS BY-DSND SALES_YTD",
+         "<37,2>" : "SELECT CUSTOMERS WITH SALES_YTD > \"0\" BY-DSND SALES_YTD"
+      },
+      "<38>" : {
+         "<38,1>" : "ID",
+         "<38,2>" : "ID"
+      },
+      "<39>" : {
+         "<39,1>" : "SALES_YTD",
+         "<39,2>" : "SALES_YTD"
+      },
+      "<40>" : {
+         "<40,1>" : "",
+         "<40,2>" : ""
+      },
+      "<41>" : {
+         "<41,1>" : "",
+         "<41,2>" : ""
+      },
+      "<42>" : {
+         "<42,1>" : {
+            "<42,1,1>" : "L",
+            "<42,1,2>" : "L"
+         },
+         "<42,2>" : {
+            "<42,2,1>" : "L",
+            "<42,2,2>" : "L"
+         }
+      },
+      "<43>" : {
+         "<43,1>" : "",
+         "<43,2>" : "F$2"
+      },
+      "<44>" : {
+         "<44,1>" : {
+            "<44,1,1>" : "L1",
+            "<44,1,2>" : "B0",
+            "<44,1,3>" : "C.10"
+         },
+         "<44,2>" : {
+            "<44,2,1>" : "L1",
+            "<44,2,2>" : "B0"
+         }
+      }
+   }
+],
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "GRAPH",
+         "classID" : "O4W",
+         "entityID"   : "SALES"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*GRAPH*O4W*SALES*15779.5299768519",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : ["O4WGRAPHS EXAMPLES*SALES"],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "GRAPH",
+      "updatedOn"      : "15 MAR 2011 09:51",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

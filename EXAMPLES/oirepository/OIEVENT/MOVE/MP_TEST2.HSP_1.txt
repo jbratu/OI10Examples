@@ -1,0 +1,90 @@
+Declare Subroutine Set_Property
+
+// Adjust the window's controls as the user moves the horizontal splitter bar.
+
+   // Get the bar "thickness"
+   barH = Get_Property( ctrlEntID, 'HEIGHT' )
+   
+   // Get the bar initial position
+   barP = Get_Property( ctrlEntID, 'TOP', XCoord )
+   
+   // Move the bar
+   Set_Property( ctrlEntID, 'TOP', XCoord )
+
+   // How far did the bar Move 
+   barM = barP - YCoord
+   
+   // Move the left controls
+   valLeftControl = @window:'.TLB_MAIN'
+   Set_Property( valLeftControl, 'BOTTOM', yCoord - 4 )
+
+   // Move the right controls and reset the height
+   valRightControl1 = @Window: '.EDL_HEADER'
+   Set_Property( valRightControl1, "TOP", yCoord  + barH + 4 )
+   
+   valPanelHeight = Get_Property(valPanelLower, 'HEIGHT')
+   Set_Property( valPanelLower, 'HEIGHT', valPanelHeight + barM )
+--[begin_sep::1_psh.2tset_pm*evom*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "MOVE",
+         "entityID"   : "MP_TEST2.HSP_1"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*MOVE*MP_TEST2.HSP_1*18268.5628125",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_TEST2.HSP_1 MOVE event script",
+      "updatedOn"      : "05 JAN 2018 13:30",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_TEST2",
+                          "EXAMPLES*OIEVENTEXE*MOVE*MP_TEST2.HSP_1",
+                          "EXAMPLES*OIEVENTDBG*MOVE*MP_TEST2.HSP_1"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

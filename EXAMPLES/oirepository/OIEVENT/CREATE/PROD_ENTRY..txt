@@ -1,0 +1,84 @@
+
+*// some fields are required, but we'll let the user tab by them and just check for 
+*// required fields on the Write Event. The IOOPTIONS property handles that for us.
+
+    options = @@Window->iooptions
+    options<10> = 1
+    @@Window->iooptions = options
+    
+*// Set the frame to not allow the users to change the size
+
+    CurSize = Get_Property(@Window, "SIZE")
+
+    MinW = CurSize<3>
+    MinH = CurSize<4>
+    MaxW = CurSize<3>
+    MaxH = CurSize<4>
+
+    x = Set_Property(@Window,"TRACKINGSIZE",MinW:@FM:MinH:@FM:MaxW:@FM:MaxH)    
+
+RETURN 0
+--[begin_sep::.yrtne_dorp*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "PROD_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "PROD_ENTRY",
+      "updatedOn"      : "22 DEC 2017 01:30",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*PROD_ENTRY.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*PROD_ENTRY.",
+                          "EXAMPLES*OIWIN**PROD_ENTRY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

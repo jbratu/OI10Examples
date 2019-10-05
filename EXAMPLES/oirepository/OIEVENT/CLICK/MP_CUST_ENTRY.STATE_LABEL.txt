@@ -1,0 +1,76 @@
+Declare Function PopUp
+
+*// We could use anther combo box here, but let's use a popup for the purposes of an example.  
+*// This examples uses shothand code.
+
+    ans = popup(@window, '', 'STATES_POPUP')
+
+    if len(ans) then
+	    .state->defprop=ans
+    end
+
+RETURN 1
+--[begin_sep::lebal_etats.yrtne_tsuc_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_CUST_ENTRY.STATE_LABEL"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_CUST_ENTRY.STATE_LABEL*18272.724212963",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY.STATE_LABEL CLICK event script",
+      "updatedOn"      : "09 JAN 2018 17:22",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_CUST_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_CUST_ENTRY.STATE_LABEL",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_CUST_ENTRY.STATE_LABEL"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

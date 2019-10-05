@@ -1,0 +1,131 @@
+
+$Insert Mapi_Equates
+
+Declare Function Unassigned, Set_Status, Get_Status
+Declare Function MapiSendMail, MapiLogon, MapiLogoff, Msg
+
+equ CRLF$ to \0D0A\
+equ CR$   to \0D\
+equ LF$   to \0A\
+equ TAB$  to \09\
+
+Txt   = "Below Find your Invoice Information" 	: CRLF$
+Txt  := ""						          		: CRLF$
+
+details = .details->list
+id		= .id->text
+amount  = .amount->text
+cust_no = .cust_no->text
+
+email_address = xlate('CUSTOMERS', Cust_no, 'EMAIL', 'X')
+if len(email_address) else
+	x = msg('','There is no email address entered for customer number ':cust_no:'.|Please enter one and try this process again')
+	return 0
+End
+
+inv_date = .invoice_date->text
+convert @vm to tab$ in details
+swap @fm with crlf$ in details
+
+txt:= 'Invoice Number ':tab$:id:crlf$
+txt:= 'Invoice Date	':tab$: inv_date :crlf$
+txt:= 'Invoice Amt	':tab$: amount :crlf$
+txt:= 'SKU':tab$:tab$:'Description': tab$:tab$:tab$:'Qty':tab$: 'Cost' :tab$:'Price':crlf$
+txt:= details: CRLF$ 
+
+Flags = MAPI_LOGON_UI$ 
+
+Message = ''
+Message<POS_SUBJECT$> = "Your Invoice"
+Message<POS_TO$     > = email_address
+Message<POS_TEXT$   > = Txt
+Message<POS_FLAGS$  > = Flags
+Message<POS_TYPE$   > = "IPM.Microsoft Mail.Note"
+
+x = Set_Status(0)
+check = MAPILogon(session_id, parent, '', '', flags)
+if Get_Status(ErrCode) then
+	Call FsMsg()
+end
+
+if check then
+	FLAGS = ''
+	Flags = MAPI_LOGON_UI$ + MAPI_DIALOG$
+	if MAPISendMail(session_id, 0, Flags, Message) then
+		x = Msg(@window, "Message sent successfully!")
+	end else
+		x = Get_Status(ErrMsg)
+		y = 'No email was sent!'
+		x = Msg(@window, y:' Reason: ':ErrMsg)
+	end
+
+End else
+	x = Get_Status(ErrMsg)
+	x = Msg(@window, ErrMsg)
+End
+
+x = MapiLogoff(Session_id)
+
+return 0
+--[begin_sep::liame_ntb.yrtne_vni_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_INV_ENTRY.BTN_EMAIL"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_INV_ENTRY.BTN_EMAIL*18373.6698611111",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*CLICK*MP_INV_ENTRY.BTN_EMAIL",
+      "updatedOn"      : "20 APR 2018 16:04",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

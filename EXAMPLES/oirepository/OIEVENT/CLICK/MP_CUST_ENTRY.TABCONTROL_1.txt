@@ -1,0 +1,73 @@
+declare subroutine Set_Property
+
+*// This code is used to change the page based on the tab that the user clicks.  
+*// It works in conjunction with the PageChanged property.
+    Page = Get_Property(CtrlEntId, 'VALUE')
+
+    Set_Property(@WINDOW,'VPOSITION', Page)
+
+RETURN 1
+--[begin_sep::1_lortnocbat.yrtne_tsuc_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_CUST_ENTRY.TABCONTROL_1"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_CUST_ENTRY.TABCONTROL_1*18272.7242361111",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CLICK",
+      "updatedOn"      : "11 JAN 2018 09:44",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CLICK*MP_CUST_ENTRY.TABCONTROL_1",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_CUST_ENTRY.TABCONTROL_1",
+                          "EXAMPLES*OIWIN**MP_CUST_ENTRY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

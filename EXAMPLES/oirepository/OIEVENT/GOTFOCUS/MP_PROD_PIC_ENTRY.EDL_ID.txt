@@ -1,0 +1,90 @@
+Declare Function Get_Property, Set_Property
+
+*// Clear the current image and reload the image with the image
+*// assigned to the current record.
+
+    pathToBitmap = Get_Property (@Window : ".EDL_IMAGEPATH", "TEXT")
+
+    If pathToBitmap = "" then
+
+        *// Reset the default image on a record.  The default image path is hard coded into the 
+        *// EDL_DEFAULTIMAGE prompt and then we find the default drive where this application 
+        *// is installed.  Finally we bring the drive and image paths together into one string.
+    
+        defaultimage = Get_Property (@Window : ".EDL_DEFAULTIMAGE", "TEXT")
+	    defaultdrv = drive()
+	    defaultimage = defaultdrv:defaultimage
+	
+	    path = Set_Property (@Window : ".BMP_IMAGE", "BITMAP", defaultimage)
+
+    end else
+
+	    path = Set_Property (@Window : ".BMP_IMAGE", "BITMAP", pathToBitmap)
+
+    end
+
+RETURN 1
+--[begin_sep::di_lde.yrtne_cip_dorp_pm*sucoftog*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "GOTFOCUS",
+         "entityID"   : "MP_PROD_PIC_ENTRY.EDL_ID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*GOTFOCUS*MP_PROD_PIC_ENTRY.EDL_ID*18275.5090972222",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "PROD_PIC_ENTRY.EDL_ID GOTFOCUS event script",
+      "updatedOn"      : "12 JAN 2018 12:13",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_PROD_PIC_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*GOTFOCUS*MP_PROD_PIC_ENTRY.EDL_ID",
+                          "EXAMPLES*OIEVENTDBG*GOTFOCUS*MP_PROD_PIC_ENTRY.EDL_ID"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

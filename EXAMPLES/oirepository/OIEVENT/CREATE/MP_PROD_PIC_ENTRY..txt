@@ -1,0 +1,90 @@
+Declare Function Get_Property
+
+*// If this window is created from the dialog_box function from the PROD_ENTRY window, it will pass in a key for a
+*// specific record to be displayed.
+
+	if len(CreateParam) then
+		.EDL_ID->DefProp = CreateParam
+		Call Set_Property (@Window : "EDL_ID", "READONLY" 0)
+		Call Send_Event(@Window, "READ")
+		Call Set_Property (@Window : "EDL_ID", "READONLY" 1)
+		
+	End
+    
+*// Set the frame to not allow the users to change the size
+
+    CurSize = Get_Property(@Window, "SIZE")
+
+    MinW = CurSize<3>
+    MinH = CurSize<4>
+    MaxW = CurSize<3>
+    MaxH = CurSize<4>
+
+    x = Set_Property(@Window,"TRACKINGSIZE",MinW:@FM:MinH:@FM:MaxW:@FM:MaxH)    
+
+   
+Return 1
+--[begin_sep::.yrtne_cip_dorp_pm*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "MP_PROD_PIC_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CREATE*MP_PROD_PIC_ENTRY.*18275.5090856481",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_TEST. CREATE event script",
+      "updatedOn"      : "12 JAN 2018 12:13",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_PROD_PIC_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CREATE*MP_PROD_PIC_ENTRY.",
+                          "EXAMPLES*OIEVENTDBG*CREATE*MP_PROD_PIC_ENTRY."],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

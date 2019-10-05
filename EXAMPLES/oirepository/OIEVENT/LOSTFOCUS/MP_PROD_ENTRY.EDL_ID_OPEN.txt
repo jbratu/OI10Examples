@@ -1,0 +1,71 @@
+*// When the user has finished entering the new product code, make this control invisible and the normal ID editline visible again.
+        
+    Call Set_Property ( @Window : ".EDL_ID_OPEN", "VISIBLE", 0 )
+    Call Set_Property ( @Window : ".EDL_ID", "VISIBLE", 1 )
+    Call Send_Event   ( @Window : ".EDL_PRICE", "FOCUS" )
+
+return 1
+--[begin_sep::nepo_di_lde.yrtne_dorp_pm*sucoftsol*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "LOSTFOCUS",
+         "entityID"   : "MP_PROD_ENTRY.EDL_ID_OPEN"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*LOSTFOCUS*MP_PROD_ENTRY.EDL_ID_OPEN*18275.4772569444",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "PROD_ENTRY.EDL_ID_OPEN LOSTFOCUS event script",
+      "updatedOn"      : "12 JAN 2018 11:27",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_PROD_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*LOSTFOCUS*MP_PROD_ENTRY.EDL_ID_OPEN",
+                          "EXAMPLES*OIEVENTDBG*LOSTFOCUS*MP_PROD_ENTRY.EDL_ID_OPEN"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

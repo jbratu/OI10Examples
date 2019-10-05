@@ -1,0 +1,131 @@
+Declare Function Get_Property, Set_Property, Ping, Get_Status, Start_MDIChild, getTickCount, getEngineWindow
+$Insert Logical
+
+*// We need to seed the Randomiser variable before we do anything in the application.  This only needs to be done once.
+
+    a = getTickCount() + GetEngineWindow()
+      
+    loop
+        while ( a > 0x7FFF )
+            if mod( a, 2 ) then
+                a -= 0x7FFF
+            end else
+                b = a[-1,1]
+            if b then
+                a = int( a / b )
+            end else
+                a = int( a / 3 )
+            end
+        end   
+    repeat
+   
+    initRnd int( a )
+   
+*// Create a Status Line to display system state messages.
+    Call Set_Property( @window, "STATUSLINE", @window : ".EDL_STATUSLINE" )
+  
+*// Update the Status Line.
+    Call Send_Info("Loading, please wait . . .")  
+
+*// Call a wait cursor whilst this window loads.
+    call utility( "CURSOR", "H") 
+
+*// Just for fun, lets change the MDI background image everytime the window is activated.
+	*// Generate a random number and set the randomised image
+		randomNum = Rnd(38)+1
+		valImage = drive() :  "\EXAMPLES\Images\backgrounds\" : randomNum : ".jpg"
+        call Set_Property("MP_MDIMAIN_GRIDVIEW.MDICLIENT", "BITMAP", valImage)
+
+*// Pre-load the main application windows and leave them invisible.
+	Call Set_Property ( "MP_LOGON.BTN_LOGIN_GRIDVIEW", "DEFPROP", "Loading Customer data ..." )
+	MDIChildID = Start_MDIChild ( "MP_GRIDVIEW_CUSTOMERS", "MP_MDIMAIN_GRIDVIEW","","","" )
+	Call Set_Property ( "MP_GRIDVIEW_CUSTOMERS", "VISIBLE", 0)
+    
+   	Call Set_Property ( "MP_LOGON.BTN_LOGIN_GRIDVIEW", "DEFPROP", "Loading Product data ..." )
+	MDIChildID = Start_MDIChild ( "MP_GRIDVIEW_PRODUCTS", "MP_MDIMAIN_GRIDVIEW","","","" )
+	Call Set_Property ( "MP_GRIDVIEW_PRODUCTS", "VISIBLE", 0)
+
+   	Call Set_Property ( "MP_LOGON.BTN_LOGIN_GRIDVIEW", "DEFPROP", "Loading Order data ..." )
+	MDIChildID = Start_MDIChild ( "MP_GRIDVIEW_ORDERS", "MP_MDIMAIN_GRIDVIEW","","","" )
+	Call Set_Property ( "MP_GRIDVIEW_ORDERS", "VISIBLE", 0)
+
+   	Call Set_Property ( "MP_LOGON.BTN_LOGIN_GRIDVIEW", "DEFPROP", "Loading Invoice data ..." )
+	MDIChildID = Start_MDIChild ( "MP_GRIDVIEW_INVOICES", "MP_MDIMAIN_GRIDVIEW","","","" )
+	Call Set_Property ( "MP_GRIDVIEW_INVOICES", "VISIBLE", 0)
+    
+   	Call Set_Property ( "MP_LOGON.BTN_LOGIN_GRIDVIEW", "DEFPROP", "Loading Reports data ..." )
+	MDIChildID = Start_MDIChild ( "MP_GRIDVIEW_REPORTS", "MP_MDIMAIN_GRIDVIEW","","","" )
+	Call Set_Property ( "MP_GRIDVIEW_REPORTS", "VISIBLE", 0)
+	
+*// Make the window visible after the grid have finished loading with data
+   	Call Set_Property ( "MP_GRIDVIEW_CUSTOMERS", "VISIBLE", 0 )
+    Call Set_Property ( "MP_MDIMAIN_GRIDVIEW", "VISIBLE", 1 )
+
+*// Update the Status Line.
+    Call Send_Info("Ready.")
+  
+RETURN 0
+--[begin_sep::.weivdirg_niamidm_pm*etaerc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CREATE",
+         "entityID"   : "MP_MDIMAIN_GRIDVIEW."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CREATE*MP_MDIMAIN_GRIDVIEW.*18272.7201388889",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_MDIMAIN_GRIDVIEW. CREATE event script",
+      "updatedOn"      : "12 JAN 2018 14:52",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CREATE*MP_MDIMAIN_GRIDVIEW.",
+                          "EXAMPLES*OIEVENTEXE*CREATE*MP_MDIMAIN_GRIDVIEW.",
+                          "EXAMPLES*OIWIN**MP_MDIMAIN_GRIDVIEW"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

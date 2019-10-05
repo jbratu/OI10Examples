@@ -1,0 +1,83 @@
+
+// in dev mode, test run mode, @window usually means the ide
+
+atWindow = CtrlEntId[1,'.']
+
+
+// What country is displayed
+country = Get_Property(atWindow:'.CMB_COUNTRY', 'TEXT')
+
+//Filter the list for this country
+
+Declare Function select_Into
+cmd = 'LIST MP_SYSTEM_TOWNS TOWN ID-SUPP WITH COUNTRY = ' : quote(country) 
+list = select_Into(cmd , 'EDT')
+unused = set_Property(ctrlEntId, 'LIST', list )
+
+return 1
+
+// See also the window's CREATE event and the READ event for additional code.
+--[begin_sep::nwot_bmc.yrtne_tsuc*nwodpord*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DROPDOWN",
+         "entityID"   : "CUST_ENTRY.CMB_TOWN"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DROPDOWN*CUST_ENTRY.CMB_TOWN*18252.9008333333",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "CUST_ENTRY.CMB_TOWN DROPDOWN event script",
+      "updatedOn"      : "20 DEC 2017 22:20",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*DROPDOWN*CUST_ENTRY.CMB_TOWN",
+                          "EXAMPLES*OIEVENTEXE*DROPDOWN*CUST_ENTRY.CMB_TOWN",
+                          "EXAMPLES*OIWIN**CUST_ENTRY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

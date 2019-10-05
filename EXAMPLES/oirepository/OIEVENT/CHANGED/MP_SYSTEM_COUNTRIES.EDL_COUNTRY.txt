@@ -1,0 +1,83 @@
+*// Set the Save, Clear and Delete record buttons accordingly.
+
+    valCheck = Get_Property ( @Window : ".EDL_COUNTRY", "TEXT" )
+
+    If valCheck = "" Then
+
+        Call Set_Property ( "MP_DBADMIN.BTN_SAVE",   "ENABLED", 0 )
+        Call Set_Property ( "MP_DBADMIN.BTN_CLEAR",  "ENABLED", 0 )
+        Call Set_Property ( "MP_DBADMIN.BTN_DELETE", "ENABLED", 0 )
+
+    End Else
+
+        Call Set_Property ( "MP_DBADMIN.BTN_SAVE",   "ENABLED", 1 )
+        Call Set_Property ( "MP_DBADMIN.BTN_CLEAR",  "ENABLED", 1 )
+        Call Set_Property ( "MP_DBADMIN.BTN_DELETE", "ENABLED", 1 )
+
+    End
+
+return 1
+--[begin_sep::yrtnuoc_lde.seirtnuoc_metsys_pm*degnahc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CHANGED",
+         "entityID"   : "MP_SYSTEM_COUNTRIES.EDL_COUNTRY"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CHANGED*MP_SYSTEM_COUNTRIES.EDL_COUNTRY*18268.4392939815",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_SYSTEM_COUNTRIES.EDL_COUNTRY CHANGED event script",
+      "updatedOn"      : "05 JAN 2018 10:35",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*CHANGED*MP_SYSTEM_COUNTRIES.EDL_COUNTRY",
+                          "EXAMPLES*OIEVENTEXE*CHANGED*MP_SYSTEM_COUNTRIES.EDL_COUNTRY",
+                          "EXAMPLES*OIWIN**MP_SYSTEM_COUNTRIES"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

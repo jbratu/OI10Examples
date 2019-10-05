@@ -1,0 +1,97 @@
+Declare Subroutine Set_Property, Get_Property
+
+$Insert Logical
+
+
+
+*//	Paste the text from the Windows clip board into the current prompt.
+
+
+
+	PrevControl = Get_Property("SYSTEM" , "PREVFOCUS")
+
+
+
+	status = Send_Message(PrevControl, "PASTE")
+
+
+
+*//	As the record has changed remind the user to save changes on close. This
+
+*//	is necessary as the pasting of text into a prompt does not trigger the 
+
+*//	SAVEWARN status automatically, as is normal when data is entered by hand
+
+*//	and then the user tabs to another control.
+
+
+
+	Call Set_Property (@window, "SAVEWARN", TRUE$)
+
+
+
+RETURN 0
+--[begin_sep::etsap_ntb.yrtne_redro_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_ORDER_ENTRY.BTN_PASTE"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_ORDER_ENTRY.BTN_PASTE*18275.5812152778",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_ORDER_ENTRY.BTN_PASTE CLICK event script",
+      "updatedOn"      : "12 JAN 2018 13:56",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_ORDER_ENTRY.BTN_PASTE",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_ORDER_ENTRY.BTN_PASTE"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

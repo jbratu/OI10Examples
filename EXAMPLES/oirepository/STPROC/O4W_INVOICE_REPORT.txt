@@ -1,0 +1,427 @@
+Subroutine O4W_INVOICE_REPORT(CTLENTID, EVENT, REQUEST)
+*
+* Demonstration routine
+*
+
+$Insert O4WCOMMON
+$Insert O4WEQUATES
+
+Declare Function ucase
+
+* Open our tables (otherwise we can't generate any report)
+Open 'INVOICES' To INV.FL Else
+	O4WError("Unable to open INVOICES table - cannot proceed!")
+	Return 0
+End
+Open 'DICT','INVOICES' To @DICT Else
+	O4WError("Unable to open DICT.INVOICES table - cannot proceed!")
+	Return 0
+End
+
+* Define some style variables that we'll use repeatedly
+* This creates some "temporary" unnamed styles that we can reuse
+rightAlignStyle = O4WTextOptions("", "","1"):O4WAlignStyle("", O4W_ALIGN_RIGHT$)
+greenbarStyle = o4wcolorstyle("", "lightgreen")
+* Alternatively, this creates a named style ("overallSection") that we can reuse
+O4WTableStyle("overallSection", "", "", O4W_ALIGN_CENTER$)
+O4WSizeStyle("overallSection", "90%")
+* This creates some named styles ("invoiceSection", "headingOverride") with some explicit CSS commands
+* These could also go directly into our stylesheet
+O4WRawStyle("invoiceSection", "margin-left":@fm:"margin-right":@fm:"text-align", "0px":@FM:"0px":@FM:"left")
+O4WRawStyle("headingOverride", "padding", "8px 0px")
+
+Begin Case
+	Case EVENT _EQC "CREATE"
+		* Create event should always use O4WForm call (optionally specifying the template to use)
+		O4WFORM()
+		* Load in the stylesheet that will "dress up" our output
+		* CSS derived from editable invoice example at http://www.css-tricks.com (lots of good information there!)
+		O4WStyleSheet("../stylesheet/invoicereport.css")
+		O4WHeader("Invoice Report", 3)
+		O4WBreak()
+		O4WBreak()
+		*
+		* In the CREATE event, we will define a section for our prompt
+		* In the later pages, this section will be replaced with the invoice report output
+		*
+		* Only take up 90% of the page, and center this section
+		O4WSectionStart("invOutput", O4WMarkedOptions('1'):"overallSection")
+		* Allow for override in URL for the number of invoices per page
+		nppg = O4WGetValue("PPG")
+		If nppg = "" Or Not(Num(nppg)) Then nppg = 10
+		* Store this away so our later pages know how many should be shown
+		O4WStore(nppg, "inv_per_page", "inv_per_page")
+		O4WStore("1", "pageno", "pageno")
+		* Build a table to display the prompts
+		O4WTableStart("paramTable")
+		O4WText("Enter starting date: ")
+		O4WSetCell()
+		* As a further enhancement, this could be a 'datepicker' control
+		O4WTextbox(Oconv(DATE(), "D4/"), "", "", "STDATE")
+		O4WSetCell(2)
+		O4WText("Enter ending date: ")
+		O4WSetCell()
+		O4WTEXTBOX(Oconv(DATE(), "D4/"), "", "", "EDDATE")
+		O4WSetCell(3, 2)
+		* Display the button...
+		O4WButton("Go...", "BTN_GO")
+		* ... and associate it with the "CLICK" action
+		O4WQualifyEvent("BTN_GO", "CLICK")
+		O4WTableend("paramTable")
+		O4WSectionEnd("invOutput")
+	*
+	* CLICK event handler
+	* This may be invoked either when navigating back and forth, or when first submitting the report parameters
+	*
+	Case event _eqc "CLICK"
+		Begin Case
+			Case ctlentid _eqc "BTN_GO"
+				* Called after submitting the report parameters
+				* When responding to an event, we will almost always need the O4WResponse() call (comparable to the O4WForm() call on the CREATE event)
+				o4wresponse()
+				* determine which invoices fall in our date (if any)
+				STDATE = O4WGETVALUE("STDATE")
+				EDDATE = O4WGETVALUE("EDDATE")
+				* As an enhancement, we chould check that these are valid, and if not, return an error...
+				* "normal" OpenInsight programming is used here
+				stmt = 'SELECT INVOICES BY INVOICE_DATE BY CUST_NAME'
+				DELIM = ""
+				If stdate <> "" Then
+					stmt := ' WITH INVOICE_DATE >= "':STDATE:'"'
+					DELIM = ' AND'
+				End
+				If eddate <> "" Then
+					stmt := DELIM:' WITH INVOICE_DATE <= "':EDDATE:'"'
+				End
+				* Get the unique ID that O4W has already generated for this page
+				* Use this as the key to store the selected IDs
+				UniqueID = ucase(o4wgetvalue("O4WUniqueID"))
+				LISTID = UniqueID:"*LIST"
+				Call Rlist(STMT, 4, LISTID, '', '')
+				* did we select anything?
+				* note: this only works if we don't span multiple records; in newer versions of OpenInsight, use RTI_LIST instead to read in the entire list
+				listinfo = Xlate("SYSLISTS", LISTID, "", "X")
+				If listinfo = "" Then
+					* Return an error
+					o4wError("No invoices selected; please retry")
+				End Else
+					* Preserve the list of IDs in the O4WTEMP table
+					listinfo = Delete(listinfo, 1, 0, 0) ;* First, remove the "list header" from field 1
+					Write listinfo On O4WTempFile%, LISTID
+					* Some browsers may have available the parameters from the URL even on our AJAX events
+					* O4W will make multiple occurences of the same parameter available as @VM delimited values
+					* Make sure, then, that if we have more than one hanging around, we operate on only one
+					invperpage = o4wgetvalue("inv_per_page")<1,1>
+					If invperpage = "" Or Not(Num(invperpage)) Then
+						invperpage = 10
+					End
+					pageno = o4wgetvalue("pageno")<1,1>
+					If pageno = "" Or Not(Num(pageno)) Then
+						pageno = 1
+					End
+					* The "buildInvoices" subroutine will generate the invoices for the current page
+					Gosub buildInvoices
+				End
+			Case ctlentid _eqc "BTN_NEXT"
+				* Called by the NEXT button
+				o4wresponse()
+				invperpage = o4wgetvalue("inv_per_page")<1,1> ;* make sure, if we have more than one hanging around, we only get one
+				If invperpage = "" Or Not(Num(invperpage)) Then
+					invperpage = 10
+				End
+				pageno = o4wgetvalue("pageno")<1,1>
+				If pageno = "" Or Not(Num(pageno)) Then
+					pageno = 1
+				End
+				* Increment the page number that we were on
+				pageno += 1
+				* Build the invoices for this page
+				Gosub buildInvoices
+			Case ctlentid _eqc "BTN_PREV"
+				* Called by the PREV button
+				o4wresponse()
+				invperpage = o4wgetvalue("inv_per_page")<1,1> ;* make sure, if we have more than one hanging around, we only get one
+				If invperpage = "" Or Not(Num(invperpage)) Then
+					invperpage = 10
+				End
+				pageno = o4wgetvalue("pageno")<1,1>
+				If pageno = "" Or Not(Num(pageno)) Then
+					pageno = 1
+				End
+				* Decrement the page number that we were on
+				pageno -= 1
+				* Sanity check of the results
+				If pageno < 1 Then pageno = 1
+				* Build the invoices for this page
+				Gosub buildInvoices
+		End case
+End Case
+
+Return 0
+
+buildInvoices:
+* Tell O4W that we want to replace the "invOutput" section of the displayed browser page
+O4WSectionStart("invOutput", O4WResponseOptions():O4WMarkedOptions('1'):"overallSection")
+* Preserve the values we want to pass in on the "Next" or "Prev" button presses
+O4WStore(invperpage, "inv_per_page", "inv_per_page")
+O4WStore(pageno, "pageno", "pageno")
+* Retrieve the unique ID that O4W has generated for this form
+UniqueID = ucase(o4wgetvalue("O4WUniqueID"))
+LISTID = UniqueID:"*LIST"
+* Try to retrieve the list of selected invoices we generated previously
+Read listInfo From O4WTempFile%, ListID Else listInfo = ""
+* Is that list missing or empty?  => Error
+If listInfo = "" Then
+	O4WError("Error: No items selected, or list item lost")
+	Return
+End
+* Calculate how many invoices are in the list, and which ones in the list we should process for this page
+num.items = dcount(listInfo, @FM)
+stno = (pageno-1)*invperpage + 1
+edno = stno + invperpage - 1
+* Sanity check - are we beyond the end of the list?
+If stno > num.items Then
+	O4WError("Error: Invalid page number")
+	Return
+End
+* If the last page has fewer than our maximum to display, adjust ourselves accordingly
+If edno > num.items Then edno = num.items
+cntr = 0
+*
+* For each ID in our list, we will read the invoice record, pull out its information (and associated information from the CUSTOMERS table), and display it in appropriate sections
+*
+For each.invoice = stno To edno
+	@ID = listInfo<each.invoice>
+	Read @record From INV.FL, @ID Else
+		@RECORD = "Record ":@ID:" not found"
+	End
+	cntr += 1
+	* get all the details
+	INV_DATE = {INVOICE_DATE}
+	CUST_NO = {CUST_NO}
+	CUST_NAME = {CUST_NAME}
+	ORD_DATE = {ORDER_DATE}
+	ORD_NUM = {ORDER_NUMBER}
+	DUE_DATE = {DUE_DATE}
+	PAID_DATE = {PAID_DATE}
+	QTYS = {QTYS}
+	DESCS = {DESCS}
+	ITEMS = {ITEMS}
+	PRICES = {PRICES}
+	EXTENDED = {EXT_COSTS}
+	AMOUNT = {AMOUNT}
+	* get address information
+	CUSTINFO = Xlate("CUSTOMERS", CUST_NO, "", "X")
+	ADD1 = CUSTINFO<3>
+	ADD2 = CUSTINFO<4>
+	CITY = CUSTINFO<5>
+	ST = CUSTINFO<6>
+	ZIP = CUSTINFO<7>
+	COUNTRY = CUSTINFO<8>
+	* Display this invoice in its own section
+	* "Green bar" the output for easier identification
+	invcolor = ""
+	If cntr/2 = int(cntr/2) Then
+		* change the background color of this section
+		invcolor = greenbarStyle
+	End
+	* Insert a few blank lines
+	O4WBreak()
+	O4WBreak()
+	O4WBreak()
+	*
+	* Each invoice will go into its own section
+	* Note the use of the CNTR variable - this makes sure that each element has a unique ID (as required)
+	*
+	o4wsectionstart("invoice_":cntr, "invoiceSection":@SVM:invcolor)
+	* Display the word "INVOICE", and assign it to the "hdr" style
+	* We also assign it to the "headerOverride" style (dynamically created at the top of this report) to override the padding setting in our template's css
+	o4wtext("INVOICE", "", "headingOverride":@SVM:O4WTextOptions("","","1"):"hdr")
+	O4WBreak()
+	O4WBreak()
+	* Create a section to hold who we are, assigning it to the "identity" class
+	O4WSectionStart("identity_":cntr, "identity")
+	* Create a section for the address itself, assigning it to the "address" class
+	O4WsectionStart("address_":cntr, "address")
+	* ...and output our address information
+	O4WText("Revelation Software")
+	o4wbreak()
+	O4WText("99 Kinderkamack Rd.")
+	O4WBreak()
+	O4WText("First Floor")
+	O4WBreak()
+	O4WText("Westwood, NJ 07675")
+	O4WSectionEnd("address_":cntr)
+	* Display a logo with the "logo" class
+	O4WSectionStart("logo_":cntr, "logo")
+	o4wimage("logo", "../images/logo.gif")
+	O4WSectionEnd("logo_":cntr)
+	O4WSectionEnd("identity_":cntr)
+	* Some css to make things align properly
+	o4wsectionstart("clearing_":cntr, O4WPositionStyle("","","","","","both"));o4wsectionend("clearing_":cntr)
+	* Create the customer section using the "customer" class
+	O4WSectionStart("customer_":cntr, "customer")
+	* Output the customer information, assigned to the "customer-title" class
+	* O4W will automatically make each value its own line in the display
+	* Let's put this all together
+	custOutput = ""
+	custOutput<1,-1> = CUST_NAME
+	custOutput<1,-1> = TRIM(ADD1)
+	If trim(ADD2) <> "" Then custOutput<1,-1> = TRIM(ADD2)
+	custOutput<1,-1> = CITY:", ":ST:"  ":ZIP
+	If COUNTRY _eqc "US" or COUNTRY _eqc "USA" Then
+		country = ""
+	End
+	If trim(COUNTRY) <> "" Then custOutput<1,-1> = COUNTRY
+	O4WText(custOutput, "", "customer-title")
+	* Display a table of overall information about this invoice
+	O4WTableStart("meta_":cntr, "meta")
+	* Move to cell (1,1), and assign that cell to the "meta-head" class
+	O4WSetCell(1,1,"","meta-head")
+	O4WText("Invoice #")
+	* Shorthand to move to the next cell - (1,2) in this case
+	O4WSetCell()
+	O4WText(@ID)
+	O4WSetCell(2, 1, "", "meta-head")
+	O4WText("Date")
+	O4WSetCell()
+	O4WText(Oconv(INV_DATE, "D"))
+	O4WSetCell(3, 1, "", "meta-head")
+	O4WText("Amount Due")
+	O4WSetCell()
+	O4WText(Oconv(AMOUNT, "MD2,$"))
+	O4WTableEnd("meta_":cntr)
+	O4WSectionEnd("customer_":cntr)
+	* Create a table to display the line items, and the subtotals/totals
+	O4WTableStart("items_":cntr, "items")
+	* Display the column headings
+	O4WTableHeader("Item")
+	O4WTableHeader("Description")
+	O4WTableHeader("Unit Price")
+	O4WTableHeader("Quantity")
+	O4WTableHeader("Ext")
+	num.lines = dcount(items, @VM)
+	total = 0
+	For each.item = 1 To num.lines
+		O4WSetCell(each.item, 1, "", "item-name")
+		o4wtext(items<1,each.item>)
+		O4WSetCell(each.item, 2, "", "description")
+		O4WText(descs<1,each.item>)
+		O4WSetCell(each.item, 3, "", "cost")
+		O4WText(Oconv(PRICEs<1,EACH.ITEM>, "MD2,$"), "", rightAlignStyle)
+		O4WSetCell(each.item, 4, "", "qty")
+		O4WText(qtys<1,each.item>, "", rightAlignStyle)
+		O4WSetCell(each.item, 5, "", "price")
+		O4WText(Oconv(extended<1,each.item>, "MD2,$"), "", rightAlignStyle)
+		total += extended<1,each.item>
+	Next each.item
+	* Move to the next row, first column, and use "column spanning" to consume 2 columns; also, mark this as the "blank" style
+	O4WSetCell(num.items+1, 1, "", O4WTableCellOptions(2):"blank")
+	* Move to the 3rd column, and use column spanning to consume 2 more columnes; mark this as the "total-line" style
+	O4WSetCell("", 3, "", O4WTableCellOptions(2):"total-line")
+	O4WText("Subtotal")
+	O4WSetCell("", 5, "", "total-value")
+	O4WText(Oconv(total, "MD2,$"), "", rightAlignStyle)
+	O4WSetCell(num.items+2, 1, "", O4WTableCellOptions(2):"blank")
+	O4WSetCell("", 3, "", O4WTableCellOptions(2):"total-line")
+	O4WText("Total")
+	O4WSetCell("", 5, "", "total-value")
+	O4WText(Oconv(total, "MD2,$"), "", rightAlignStyle)
+	O4WTableEnd("items_":cntr)
+	* Done with the line items and subtotals/totals
+	* Start the terms section, assigning it to the "terms" style
+	O4WSectionStart("terms_":cntr, "terms")
+	O4WHeader("Terms", 5)
+	O4WText("NET 30 days. Finance charges of 1.5% will be made on unpaid balances after 30 days")
+	O4WSectionEnd("terms_":cntr)
+	o4wsectionend("invoice_":cntr)
+	O4WBreak()
+	O4WBreak()
+	* Finally, display a line using the "dashes" style
+	O4WDivider("", "dashes")
+Next each.invoice
+*
+* Display our forward/back buttons
+* Only enable them, though, if appropriate
+If stno > 1 Then
+	* Create the button, and make sure it's enabled
+	O4WButton("< Back", "BTN_PREV", O4WInputStyle("","1", "0"))
+	O4WQualifyEvent("BTN_PREV", "CLICK")
+End Else
+	* Create the button, but make it disabled and read-only
+	O4WButton("< Back", "BTN_PREV", O4WInputStyle("", "0","1"))
+End
+o4wspace(5)
+If edno < num.items Then
+	O4WButton("Next >", "BTN_NEXT", O4WInputStyle("","1","0"))
+	O4WQualifyEvent("BTN_NEXT", "CLICK")
+End Else
+	O4WButton("Next >", "BTN_NEXT", O4WInputStyle("", "0","1"))
+End
+*
+O4WSectionEnd("invOutput")
+Return
+--[begin_sep::troper_eciovni_w4o**corpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROC",
+         "classID" : "",
+         "entityID"   : "O4W_INVOICE_REPORT"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROC**O4W_INVOICE_REPORT*18450.4279050926",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROC**O4W_INVOICE_REPORT",
+      "updatedOn"      : "24 JAN 2019 10:16",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*STPROCEXE**O4W_INVOICE_REPORT"],
+      "uses"           : ["SYSPROG*STPROCINS**O4WEQUATES",
+                          "SYSPROG*STPROCINS**O4WMESSAGEEQUATES",
+                          "SYSPROG*STPROCINS**O4WLOCKEQUATES"],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

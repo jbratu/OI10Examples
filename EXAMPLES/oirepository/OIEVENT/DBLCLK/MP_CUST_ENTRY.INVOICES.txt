@@ -1,0 +1,86 @@
+Declare Function Dialog_Box
+
+*// Allow the users to double click on a row and open up the corresponding Invoice record.
+
+    thisWindow = CtrlEntID[1,'.']
+	
+*// Find which cell in the table was clicked.    
+    selPos = Get_Property(@wINDOW:'.INVOICES',"SELPOS")
+    selCol = selPos<1>
+    selRow = selPos<2>
+
+*// Get a list of invoice numbers and then the invoice number clicked
+    allInvoices = Get_Property(@WINDOW:".INVOICES","ARRAY")
+    thisInvoice = allInvoices<1,selRow>
+
+*// If we have an invoice number, then launch the dialog window and display the invoice record.    
+    if len(thisInvoice) then
+	    retVal = Dialog_Box('INV_ENTRY',thisWindow,thisInvoice)
+    End
+											
+return 1
+
+--[begin_sep::seciovni.yrtne_tsuc_pm*klclbd*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DBLCLK",
+         "entityID"   : "MP_CUST_ENTRY.INVOICES"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DBLCLK*MP_CUST_ENTRY.INVOICES*18272.724224537",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "DBLCLK",
+      "updatedOn"      : "09 JAN 2018 17:22",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_CUST_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*DBLCLK*MP_CUST_ENTRY.INVOICES",
+                          "EXAMPLES*OIEVENTDBG*DBLCLK*MP_CUST_ENTRY.INVOICES"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

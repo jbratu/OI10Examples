@@ -1,0 +1,87 @@
+Declare Subroutine Set_Property, Get_Property
+
+
+
+*//	Cut the selected text and copy it to the windows clipboard and then
+
+*//	because we have something to paste, enable the paste button.
+
+
+
+	PrevControl = Get_Property("SYSTEM" , "PREVFOCUS")
+
+
+
+	status = Send_Message(PrevControl, "CUT")
+
+
+
+	Set_Property(@window: ".BTN_PASTE", "ENABLED", 1)
+
+
+
+RETURN 0
+--[begin_sep::tuc_ntb.yrtne_dorp_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_PROD_ENTRY.BTN_CUT"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_PROD_ENTRY.BTN_CUT*18275.522349537",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_PROD_ENTRY.BTN_CUT CLICK event script",
+      "updatedOn"      : "12 JAN 2018 12:32",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_PROD_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_PROD_ENTRY.BTN_CUT",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_PROD_ENTRY.BTN_CUT"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

@@ -1,0 +1,132 @@
+declare function Message_Box
+$insert Message_Box_Equates
+$Insert Logical
+
+*-----------------------------------------------------------------------------------------------------------
+* We could simply set the Required property and OpenInsight prompt the user for the required fields.  
+* However, the controls names do not lead to a graceful message (EDL_FIRSTNAME or FIRST_NAME and we can use 
+* First Name) so we will handle the validation ourselves.
+
+*// First let's set some variables
+
+    valCName = ""
+    valFName = ""
+    valLName = ""
+
+*// Let's check for required fields having been completed.
+
+    valCheckCName = Get_Property ( @Window : ".EDL_COMPANY", "DEFPROP" )
+
+    If valCheckCName = "" Then
+       valCName = " Company Name,"
+    End Else
+        *// We have a value, so do nothing.
+    End
+
+    valCheckFName = Get_Property ( @Window : ".EDL_FIRSTNAME", "DEFPROP" )
+
+    If valCheckFName = "" Then
+        valFName = " First Name,"
+    End Else
+        *// We have a value, so do nothing.
+    End
+
+    valCheckLName = Get_Property ( @Window : ".EDL_LASTNAME", "DEFPROP" )
+
+    If valCheckLName = "" Then
+        valLName = " Last Name,"
+    End Else
+        *// We have a value, so do nothing.
+    End
+
+
+*// If one or more required fields have not been completed, let's prompt the user.  You could set the 'Required'
+*// property for each editline, but this returns a system validation message with less graceful fieldnames.
+
+    Begin Case
+
+        Case valCheckCName = ""
+            valFields  = valCName : valFName : valLName
+            valMessage = "The following fields require completion before this record can be saved: " : valFields : " please complete and try saving again."
+            Call Message_Box(@window, valMessage, "Data Validation Error", MSG_ICON_EXCLAM$)
+            Return 0
+
+        Case valCheckFName = ""     
+            valFields  = valCName : valFName : valLName
+            valMessage = "The following fields require completion before this record can be saved: " : valFields : " please complete and try saving again."
+            Call Message_Box(@window, valMessage, "Data Validation Error", MSG_ICON_EXCLAM$)
+            Return 0
+
+        Case valCheckLName = ""     
+            valFields  = valCName : valFName : valLName
+            valMessage = "The following fields require completion before this record can be saved: " : valFields : " please complete and try saving again."
+            Call Message_Box(@window, valMessage, "Data Validation Error", MSG_ICON_EXCLAM$)
+            Return 0
+         
+    End Case
+
+    *-----------------------------------------------------------------------------------------------------------
+
+Return 1
+--[begin_sep::.yrtne_tsuc_pm*etirw*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "WRITE",
+         "entityID"   : "MP_CUST_ENTRY."
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*WRITE*MP_CUST_ENTRY.*18373.6698726852",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*WRITE*MP_CUST_ENTRY.",
+      "updatedOn"      : "20 APR 2018 16:04",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

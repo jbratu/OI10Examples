@@ -1,0 +1,102 @@
+declare function Msg, Repository, IndexLookup
+$INsert Msg_Equates
+
+*// We'll display a message with two buttons, one saying Keyword, and one saying Listing
+
+    mess = ''
+    mess<MTEXT$> 	= 'Search by keyword, or entire product Listing?'
+    mess<MTYPE$> 	= 'BKeyword,Listing'
+    mess<MCAPTION$> = 'Search Options'
+    mess<MICON$>	= '?'
+
+    resp = msg(@window, mess)
+
+    if resp = 2 then
+	    repos_key = @appid<1>:'*POPUP**PRODUCT_POPUP_SINGLE'
+		keys = Repository('EXECUTE', repos_key, @WINdow)
+
+		If keys then
+		    .EDL_ID->text=keys
+			Call Send_Event(@window, 'READ')
+		End
+
+	end else
+
+		OwnerWindow = @Window
+		table = 'PRODUCTS'
+		IndexedFields = 'DESCRIPTION_XREF'
+		DISPLAYedfIELDS = 'ID':@VM:'DESCRIPTION'
+		mode = 'SINGLE'
+		popupname = ''
+		keys = IndexLookup(ownerwindow, table, indexedfields, displayedfields, mode, popupname)
+
+		if len(keys) then
+			.EDL_ID->text=keys
+			Call Send_Event(@window, 'READ')
+		End
+
+	end
+
+RETURN 0
+--[begin_sep::di_lbl.tset_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_TEST.LBL_ID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_TEST.LBL_ID*18373.6698726852",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*CLICK*MP_TEST.LBL_ID",
+      "updatedOn"      : "20 APR 2018 16:04",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

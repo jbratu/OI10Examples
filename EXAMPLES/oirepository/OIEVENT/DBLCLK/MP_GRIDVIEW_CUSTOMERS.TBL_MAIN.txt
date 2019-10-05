@@ -1,0 +1,100 @@
+Declare Function IndexLookup, Repository, Msg, EntID, Dialog_Box, Start_Window, Start_MDIChild
+
+*// Enable users to double click the edit tables first column to 
+*// select an item from an Index Lookup or standard pop-up window.
+
+	Selpos = @CtrlEntID->Selpos
+
+	col = Selpos<1>
+	row = Selpos<2>
+
+*// If column one (ID) is double clicked, open up the record in the MP_CUST_ENTRY window.
+	
+	if col = 1 then
+
+		thisWindow = CtrlEntID[1,'.']
+		
+		selPos = .TBL_MAIN->selpos
+		selCol = selPos<1>
+		selRow = selPos<2>
+		
+		allIDs = .TBL_MAIN->array
+		thisID = allIDs<1,selRow>
+		
+		if len(thisID) then
+			currPos = get_Property(CtrlEntID, "CARETPOS" )
+			currCol = currPos<1>
+			currRow = currPos<2>
+			
+			valRecordid = send_Message (CtrlEntID, "TEXT_BY_POS", 1, currRow)
+			windowname  = "MP_CUST_ENTRY"
+			retVal     = dialog_box (windowname, thisWindow, thisID)
+		end	
+	end	
+
+RETURN 0
+
+--[begin_sep::niam_lbt.sremotsuc_weivdirg_pm*klclbd*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DBLCLK",
+         "entityID"   : "MP_GRIDVIEW_CUSTOMERS.TBL_MAIN"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DBLCLK*MP_GRIDVIEW_CUSTOMERS.TBL_MAIN*18272.7244675926",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_GRIDVIEW_CUSTOMERS.TBL_MAIN DBLCLK event script",
+      "updatedOn"      : "12 JAN 2018 14:41",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*DBLCLK*MP_GRIDVIEW_CUSTOMERS.TBL_MAIN",
+                          "EXAMPLES*OIEVENTEXE*DBLCLK*MP_GRIDVIEW_CUSTOMERS.TBL_MAIN",
+                          "EXAMPLES*OIWIN**MP_GRIDVIEW_CUSTOMERS"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

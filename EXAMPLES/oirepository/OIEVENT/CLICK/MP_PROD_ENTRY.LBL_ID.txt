@@ -1,0 +1,116 @@
+Declare Function Msg, Repository, IndexLookup
+$Insert Msg_Equates
+
+*// We will display a message with two buttons, one saying Keyword, and one saying Listing.
+*// This will enable the users to choose whether to search for a KEYWORD or to launch an OI
+*// Popup to provide a rich pick list.
+
+    mess            = ''
+    mess<MTEXT$> 	= 'Search by keyword, or entire product Listing?'
+    mess<MTYPE$> 	= 'BKeyword,Listing'
+    mess<MCAPTION$> = 'Search Options'
+    mess<MICON$>	= '?'
+
+    resp = msg(@window, mess)
+
+    *// If the user's response is LISTING launch the Popup and then read the required record.
+
+        if resp = 2 then
+
+             repos_key = @appid<1>:'*POPUP**PRODUCT_POPUP_SINGLE'
+  	         keys = Repository('EXECUTE', repos_key, @WINdow)
+
+	         *// Note we will need to write the keys to both the EDL_ID and EDL_ID_OPEN 
+             *// editlines otherwise we will get an error from OpenInsight that all key fields are empty.
+             if keys then
+                 .EDL_ID->text=keys
+                 .EDL_ID_OPEN->text=keys
+		         Call Send_Event(@window, 'READ')
+	         End
+
+        end else
+
+
+        *// If the user's response if KEYWORD, we will launch a standard OI Index Lookup window.    
+
+            OwnerWindow = @Window
+            table = 'PRODUCTS'
+            IndexedFields = 'DESCRIPTION_XREF'
+            DISPLAYedfIELDS = 'ID':@VM:'DESCRIPTION'
+            mode = 'SINGLE'
+            popupname = ''
+            keys = IndexLookup(ownerwindow, table, indexedfields, displayedfields, mode, popupname)
+
+	        *// Note we will need to write the keys to both the EDL_ID and EDL_ID_OPEN 
+            *// editlines otherwise we will get an error from OpenInsight that all key fields are empty.
+            if len(keys) then
+        	    .EDL_ID->text=keys
+                .EDL_ID_OPEN->text=keys
+        	    Call Send_Event(@window, 'READ')
+            End
+
+        End
+    
+Return 1    
+--[begin_sep::di_lbl.yrtne_dorp_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_PROD_ENTRY.LBL_ID"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_PROD_ENTRY.LBL_ID*18373.6698726852",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*CLICK*MP_PROD_ENTRY.LBL_ID",
+      "updatedOn"      : "20 APR 2018 16:04",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

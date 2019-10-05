@@ -1,0 +1,87 @@
+compile insert MP3_IMPULSEMP3
+* Insert for the ImpulseMP3.ISMP3Player OLE Control
+
+* Control Name
+EQU MP3PLAYERCONTROL$ to ".IMPULSEMP3"
+
+* Properties
+EQU FileName$ 	to "OLE.FileName"
+EQU Title$ 			to "OLE.ID3Title"
+EQU Artist$ 		to "OLE.ID3Artist"
+EQU Album$ 			to "OLE.ID3Album"
+EQU Comments$ 	to "OLE.ID3Comment"
+EQU Genre$ 			to "OLE.ID3Genre"
+EQU Year$ 			to "OLE.ID3Year"
+EQU Length$ 		to "OLE.TrackLength"
+
+* Methods
+EQU About$ 						to "About"
+EQU Play$							to "PlayStart"
+EQU Pause$						to "PlayPause"
+EQU IsPlaying$				to "IsPlaying"
+EQU Stop$							to "PlayStop"
+
+* Events
+EQU FinishedPlaying$ 	to "FinishedPlaying"
+--[begin_sep::3pmeslupmi_3pm**snicorpts*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "STPROCINS",
+         "classID" : "",
+         "entityID"   : "MP3_IMPULSEMP3"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*STPROCINS**MP3_IMPULSEMP3*12704.8760300926",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*STPROCINS**MP3_IMPULSEMP3",
+      "updatedOn"      : "12 OCT 2002 23:49",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

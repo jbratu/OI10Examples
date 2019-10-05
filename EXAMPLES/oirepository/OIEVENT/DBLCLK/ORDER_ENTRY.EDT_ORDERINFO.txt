@@ -1,0 +1,103 @@
+declare function IndexLookup, repository, Msg
+
+selpos = @CtrlEntID->selpos
+
+col = selpos<1>
+row = selpos<2>
+
+if col = 1 then
+	mess = ''
+	mess<1> = 'Search by keyword, or entire product Listing?'
+	mess<2> = 'BKeyword,Listing'
+	resp = msg(@window, mess)
+
+	if resp = 2 then
+		repos_key = @appid<1>:'*POPUP**PRODUCT_POPUP'
+		keys = Repository('EXECUTE', repos_key, @WINdow)
+		if keys then
+			array = @CtrlEntID->array
+			array<1, row> = keys
+			@CtrlEntID->Array = array
+			@CtrlEntID->selpos = col+2 :@fm: row
+		End
+	end else
+		OwnerWindow = @Window
+		table = 'PRODUCTS'
+		IndexedFields = 'DESCRIPTION_XREF'
+		DISPLAYedfIELDS = 'ID':@VM:'DESCRIPTION'
+		mode = 'SINGLE'
+		popupname = ''
+		keys = IndexLookup(ownerwindow, table, indexedfields, displayedfields, mode, popupname)
+		if len(keys) then
+			@CtrlEntId->text=keys
+			@CtrlEntID->selpos = col+2 :@fm: row
+		End
+	end
+	
+end
+
+RETURN 0
+--[begin_sep::ofniredro_tde.yrtne_redro*klclbd*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "DBLCLK",
+         "entityID"   : "ORDER_ENTRY.EDT_ORDERINFO"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*DBLCLK*ORDER_ENTRY.EDT_ORDERINFO*18268.5455902778",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "ORDER_ENTRY.EDT_ORDERINFO DBLCLK event script",
+      "updatedOn"      : "05 JAN 2018 13:05",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*DBLCLK*ORDER_ENTRY.EDT_ORDERINFO",
+                          "EXAMPLES*OIEVENTDBG*DBLCLK*ORDER_ENTRY.EDT_ORDERINFO"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

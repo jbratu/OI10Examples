@@ -1,0 +1,79 @@
+declare function Repository
+	
+repos_key = @appid<1>:'*POPUP**CUSTOMER_ID_POPUP'
+keys = Repository('EXECUTE', repos_key, @WINdow)
+
+if keys then
+	*// the following is shorthande notation for set_property.
+	.EDL_CUSTOMERNO->text=keys
+    .EDL_CUSTOMERNO->FOCUS=1
+    
+    *// Send a Lost Focus event to the Customer Number edit line to fire the Customer Name calculated editline.
+    Call Send_Event ( @Window : ".EDL_CUSTOMERNO", "LOSTFOCUS")
+End
+		
+RETURN 1
+--[begin_sep::onremotsuc_lbl.yrtne_redro_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_ORDER_ENTRY.LBL_CUSTOMERNO"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_ORDER_ENTRY.LBL_CUSTOMERNO*18275.5803587963",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "0",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "ORDER_ENTRY.CUST_NO_LABEL CLICK event script",
+      "updatedOn"      : "12 JAN 2018 13:55",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_ORDER_ENTRY.LBL_CUSTOMERNO",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_ORDER_ENTRY.LBL_CUSTOMERNO"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

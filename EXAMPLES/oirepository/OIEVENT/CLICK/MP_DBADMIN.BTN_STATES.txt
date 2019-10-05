@@ -1,0 +1,72 @@
+*// Disable all other System Admin MDI Children buttons to only allow one to be displayted at a time.
+
+    Call Set_Property ( @Window : ".BTN_TOWNS",       "ENABLED", 0 )
+    Call Set_Property ( @Window : ".BTN_STATES",      "ENABLED", 1 )
+    Call Set_Property ( @Window : ".BTN_COUNTRIES",   "ENABLED", 0 )
+    Call Set_Property ( @Window : ".BTN_CLOSEWINDOW", "ENABLED", 1 )    
+
+return 1
+--[begin_sep::setats_ntb.nimdabd_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_DBADMIN.BTN_STATES"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_DBADMIN.BTN_STATES*18268.4179166667",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_DMADMIN.BTN_STATES CLICK event script",
+      "updatedOn"      : "05 JAN 2018 10:01",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_DBADMIN",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_DBADMIN.BTN_STATES",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_DBADMIN.BTN_STATES"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

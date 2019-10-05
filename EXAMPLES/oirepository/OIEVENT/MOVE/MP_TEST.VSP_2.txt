@@ -1,0 +1,144 @@
+*// Set some initial variables  
+    origPos = Get_Property( CtrlEntID , "LEFT" )
+    newPos  = YCoord
+    delta = ( newPos - origPos )
+
+*// Move the bar to where it was dropped
+    call Set_Property( CtrlEntID, "LEFT", newPos )
+  
+*// Left side controls
+    *// Define a list of control names to work with
+    ctrlIDs   = "TLB_MAIN"
+    *// Assign a Code for each control listed: W=Width, M=Move, I=Ignore    
+    *autoCodes = "M,I,W"
+    autoCodes = "W"
+    xCount  = fieldCount( ctrlIDs, "," )
+
+    for x = 1 to xCount
+        ctrlID   = @window : "." : field( ctrlIDs, ",", x )
+        autoCode = field( autoCodes, ",", x )
+
+        begin case
+            case ( autoCode == "M" )
+
+            *// If the control should be moved with the bar then update it's LEFT property by applying the delta
+                tmp = Get_property( ctrlID, "LEFT" )
+                call Set_Property( ctrlID, "LEFT", tmp + delta )
+
+            case ( autoCode == "W" )
+
+            *// If the control's width should adjust to the bar then update it's WIDTH by applying the delta
+                tmp = Get_property( ctrlID, "WIDTH" )
+                call Set_Property( ctrlID, "WIDTH", tmp + delta )
+
+            case 1
+
+            *// Ignore
+                null
+         
+        end case
+
+    next
+
+*// Right side controls
+    *// Define a list of control names to work with
+    ctrlIDs   = "EDL_HEADER,EBX_REPORTDETAIL,EDL_2"
+    *// Assign a Code for each control listed: W=Width, M=Move, I=Ignore
+    autoCodes = "W,W,W"
+    xCount  = fieldCount( ctrlIDs, "," )
+
+    for x = 1 to xCount
+        ctrlID   = @window : "." : field( ctrlIDs, ",", x )
+        autoCode = field( autoCodes, ",", x )
+
+        begin case
+            case ( autoCode == "M" )
+
+            *// If the control should be moved with the bar then update it's LEFT property by applying the delta
+                tmp = Get_property( ctrlID, "LEFT" )
+                call Set_Property( ctrlID, "LEFT", tmp + delta )
+
+            case ( autoCode == "W" )
+
+           *// If the control's width should adjust to the bar then update it's LEFT and it's WIDTH
+
+               tmp = Get_property( ctrlID, "SIZE" )
+               tmp<1> = tmp<1> + delta
+               tmp<3> = tmp<3> - delta
+
+               call Set_Property( ctrlID, "SIZE", tmp )
+
+            case 1
+
+           *// Ignore
+               null
+
+     end case
+
+  next
+
+return 1
+
+--[begin_sep::2_psv.tset_pm*evom*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "MOVE",
+         "entityID"   : "MP_TEST.VSP_2"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*MOVE*MP_TEST.VSP_2*18268.6974074074",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*MOVE*MP_REPORTS.VSP_2",
+      "updatedOn"      : "05 JAN 2018 17:51",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIEVENTDBG*MOVE*MP_TEST.VSP_2",
+                          "EXAMPLES*OIEVENTEXE*MOVE*MP_TEST.VSP_2"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

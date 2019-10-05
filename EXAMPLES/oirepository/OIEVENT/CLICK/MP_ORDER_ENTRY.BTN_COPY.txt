@@ -1,0 +1,87 @@
+Declare Subroutine Set_Property, Get_Property
+
+
+
+*//	Copy the selected text and copy it to the windows clipboard and then
+
+*//	because we have something to paste, enable the paste button.
+
+
+
+PrevControl = Get_Property("SYSTEM" , "PREVFOCUS")
+
+
+
+status = Send_Message(PrevControl, "COPY")
+
+
+
+Set_Property(@window: ".BTN_PASTE", "ENABLED", 1)
+
+
+
+RETURN 0
+--[begin_sep::ypoc_ntb.yrtne_redro_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_ORDER_ENTRY.BTN_COPY"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_ORDER_ENTRY.BTN_COPY*18275.5812152778",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "0",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "MP_ORDER_ENTRY.BTN_COPY CLICK event script",
+      "updatedOn"      : "12 JAN 2018 13:56",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : ["EXAMPLES*OIWIN**MP_ORDER_ENTRY",
+                          "EXAMPLES*OIEVENTEXE*CLICK*MP_ORDER_ENTRY.BTN_COPY",
+                          "EXAMPLES*OIEVENTDBG*CLICK*MP_ORDER_ENTRY.BTN_COPY"],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}

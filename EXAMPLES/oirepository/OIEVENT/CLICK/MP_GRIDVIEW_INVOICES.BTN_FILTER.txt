@@ -1,0 +1,117 @@
+Declare Function With
+$INSERT RLIST_EQUATES
+
+*// Update the Status Line.
+    Call Send_Info("Loading data, please wait . . .")
+
+*//	Build a list of records based on the find editline and populate the edittable.
+    Open "INVOICES" To vInvoices Then
+
+	    EoF = 0
+	    DataArray    = ""
+
+	    valFind = Get_Property (@Window : ".EDL_FILTER", "TEXT")
+	    sentence = "SELECT INVOICES WITH CUST_NAME CONTAINING '" : valFind : "'"
+        call RLIST( sentence, TARGET_ACTIVELIST$, '', '', '' )
+
+	    DataArray=space(1000000)
+	    Ptr=1
+
+	    Loop
+		    ReadNext Id Else EoF = 1
+	    Until EoF Do
+		    Read Row From vInvoices, Id Then
+            *// This line contains an XLATE for the Customer_Name calaculated column so that we can use it in the data array definition below.
+			    calcField1 = xlate( "INVOICES", ID, "CUST_NAME", "X" )
+			    calcField2 = xlate( "INVOICES", ID, "ORDER_DATE", "X" )
+			    calcField3 = xlate( "INVOICES", ID, "DUE_DATE", "X" )
+
+			    newRow = ID :@VM: calcfield1 :@VM: row<1> :@VM: Oconv(calcfield2,"DJS/") :@VM: Oconv(row<2>,"MD2,") :@VM: Oconv(row<4>,"DJS/") :@VM: Oconv(calcfield3,"DJS/") :@VM: Oconv(row<3>,"DJS/") : @Fm
+                lenNewRow = len(newRow)
+                dataArray[ptr, lenNewRow] = newRow
+                ptr += lenNewRow
+
+		    End Else
+			    Call Fsmsg()
+		    End
+	    Repeat
+
+	    dataArray=trimb(dataArray)
+	    dataArray[-1,1]=""
+
+	    CtrlArray = @Window : ".TBL_MAIN"
+	    PropArray = "LIST"
+
+	    Call Set_Property(CtrlArray, PropArray, DataArray)
+
+    End
+
+*// Sort the Company column.
+    Call Set_Property ( @Window : ".TBL_MAIN", "SORTEDCOL", 3:@fm:1)
+
+*// Update the Status Line.
+    Call Send_Info("Ready.")
+
+RETURN 0
+--[begin_sep::retlif_ntb.seciovni_weivdirg_pm*kcilc*tneveio*selpmaxe::end_sep]--
+{
+   "sysrepos" : {
+      "reposID" : {
+         "appID"   : "EXAMPLES",
+         "typeID"  : "OIEVENT",
+         "classID" : "CLICK",
+         "entityID"   : "MP_GRIDVIEW_INVOICES.BTN_FILTER"
+      },
+      "author"         : "SYSPROG",
+      "accessPermit"   : ["$PUBLIC"],
+      "updatePermit"   : ["$PUBLIC"],
+      "checkedOut"     : "0",
+      "colorKey"       : "",
+      "description"    : [],
+      "document"       : [],
+      "evaluate"       : "0",
+      "evaluateNotes"  : [],
+      "imageCount"     : "",
+      "keyword"        : [],
+      "logPointer"     : "EXAMPLES*OIEVENT*CLICK*MP_GRIDVIEW_INVOICES.BTN_FILTER*18373.6701851852",
+      "module"         : [],
+      "pointedAppID"   : [],
+      "pointedEntID"   : [],
+      "pointerAppID"   : [],
+      "pointerEntID"   : [],
+      "publishable"    : "1",
+      "recompile"      : "",
+      "scmpurge"    : "",
+      "scmAuthor"  : "",
+      "scmCommit"  : "",
+      "scmFormat"      : "",
+      "scmInclude"     : "",
+      "scmPullDt"     : "",
+      "scmPushDt"     : "",
+      "shareable"      : "1",
+      "state"          : "1",
+      "subKey"         : [],
+      "sysBuild"       : "",
+      "sysPublish"     : "",
+      "title"          : "EXAMPLES*OIEVENT*CLICK*MP_GRIDVIEW_INVOICES.BTN_FILTER",
+      "updatedOn"      : "20 APR 2018 16:05",
+      "updatedBy"      : "SYSPROG",
+      "usedBy"         : [],
+      "uses"           : [],
+      "user1"          : [],
+      "user2"          : [],
+      "user3"          : [],
+      "user4"          : [],
+      "user5"          : [],
+      "user6"          : [],
+      "user7"          : [],
+      "user8"          : [],
+      "user9"          : []
+   },
+   "sysreposLog" : {
+      "logEntries" : [
+      ]
+   },
+
+   "encoding" : "ansi"
+}
